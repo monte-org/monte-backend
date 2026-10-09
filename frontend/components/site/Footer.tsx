@@ -28,7 +28,7 @@ export function Footer() {
               Features
             </Link>
             <Link
-              href="https://github.com/StellarPaya/monte"
+              href="https://github.com/monte-org"
               target="_blank"
               rel="noreferrer"
               className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"

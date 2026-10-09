@@ -19,7 +19,7 @@ export function CTA() {
               infrastructure and Stellar settlement.
             </p>
             <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-              <Button href="https://github.com/StellarPaya/monte" variant="primary">
+              <Button href="https://github.com/monte-org" variant="primary">
                 View on GitHub
               </Button>
               <Button href="#" variant="secondary">
