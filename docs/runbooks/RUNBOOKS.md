@@ -1,4 +1,4 @@
-# Paya Platform Runbooks
+# Monte Platform Runbooks
 
 ## Table of Contents
 1. [Service Outage](#service-outage)
@@ -21,7 +21,7 @@
 ### Initial Assessment
 ```bash
 # Check service status
-sudo systemctl status paya-backend
+sudo systemctl status monte-backend
 
 # Check if service is running
 ps aux | grep node
@@ -38,13 +38,13 @@ curl http://localhost:3000/api/v1/health
 #### 1. Check Application Logs
 ```bash
 # View recent logs
-sudo journalctl -u paya-backend -n 100
+sudo journalctl -u monte-backend -n 100
 
 # Check for errors
-sudo journalctl -u paya-backend | grep -i error
+sudo journalctl -u monte-backend | grep -i error
 
 # Check application logs
-tail -100 /var/log/paya/error.log
+tail -100 /var/log/monte/error.log
 ```
 
 #### 2. Check Dependencies
@@ -81,10 +81,10 @@ ulimit -n
 #### Scenario 1: Service Crashed
 ```bash
 # Restart service
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Monitor startup
-sudo journalctl -u paya-backend -f
+sudo journalctl -u monte-backend -f
 
 # Verify health
 curl http://localhost:3000/api/v1/health
@@ -96,7 +96,7 @@ curl http://localhost:3000/api/v1/health
 free -h
 
 # Restart service
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Consider increasing memory limits
 # Update systemd service file with MemoryLimit
@@ -108,10 +108,10 @@ sudo systemctl restart paya-backend
 df -h
 
 # Clean up old logs
-find /var/log/paya -name "*.log" -mtime +30 -delete
+find /var/log/monte -name "*.log" -mtime +30 -delete
 
 # Clean up old backups
-find /var/backups/paya -name "*.sql.gz" -mtime +30 -delete
+find /var/backups/monte -name "*.sql.gz" -mtime +30 -delete
 
 # Clean up npm cache
 npm cache clean --force
@@ -126,7 +126,7 @@ sudo systemctl status postgresql
 sudo systemctl restart postgresql
 
 # Check connection settings
-cat /home/paya/backend/.env | grep DATABASE
+cat /home/monte/backend/.env | grep DATABASE
 
 # Test connection
 PGPASSWORD=$DATABASE_PASSWORD psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME -c "SELECT 1;"
@@ -155,14 +155,14 @@ sudo systemctl status postgresql
 psql -U postgres -c "SELECT count(*) FROM pg_stat_activity;"
 
 # Check long-running queries
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT pid, now() - pg_stat_activity.query_start AS duration, query
   FROM pg_stat_activity
   WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes';
 "
 
 # Check locks
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT * FROM pg_locks 
   WHERE NOT granted;
 "
@@ -181,7 +181,7 @@ sudo tail -100 /var/log/postgresql/postgresql-14-main.log | grep -i error
 
 #### 2. Check Table Bloat
 ```bash
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT schemaname, tablename,
          pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size
   FROM pg_stat_user_tables
@@ -191,7 +191,7 @@ psql -U postgres -d paya -c "
 
 #### 3. Check Index Usage
 ```bash
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT schemaname, tablename, indexname, idx_scan
   FROM pg_stat_user_indexes
   ORDER BY idx_scan ASC
@@ -224,7 +224,7 @@ psql -U postgres -c "
 #### Scenario 2: Long-Running Query
 ```bash
 # Identify long-running query
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT pid, now() - pg_stat_activity.query_start AS duration, query
   FROM pg_stat_activity
   WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes';
@@ -240,13 +240,13 @@ psql -U postgres -c "SELECT pg_terminate_backend(<pid>);"
 #### Scenario 3: Database Locks
 ```bash
 # Check locks
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT * FROM pg_locks 
   WHERE NOT granted;
 "
 
 # Identify blocking query
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT blocked_locks.pid AS blocked_pid,
          blocked_activity.usename AS blocked_user,
          blocking_locks.pid AS blocking_pid,
@@ -279,13 +279,13 @@ psql -U postgres -c "SELECT pg_terminate_backend(<blocking_pid>);"
 #### Scenario 4: Table Bloat
 ```bash
 # Vacuum the table
-psql -U postgres -d paya -c "VACUUM FULL <tablename>;"
+psql -U postgres -d monte -c "VACUUM FULL <tablename>;"
 
 # Reindex the table
-psql -U postgres -d paya -c "REINDEX TABLE <tablename>;"
+psql -U postgres -d monte -c "REINDEX TABLE <tablename>;"
 
 # Analyze the table
-psql -U postgres -d paya -c "ANALYZE <tablename>;"
+psql -U postgres -d monte -c "ANALYZE <tablename>;"
 ```
 
 ### Prevention
@@ -312,7 +312,7 @@ curl -s http://localhost:3000/metrics | grep payment_failure
 curl -s https://horizon.stellar.org/
 
 # Check recent payment logs
-grep -i "payment.*failed" /var/log/paya/payments.log | tail -50
+grep -i "payment.*failed" /var/log/monte/payments.log | tail -50
 ```
 
 ### Troubleshooting Steps
@@ -345,10 +345,10 @@ soroban contract invoke \
 #### 3. Check Payment Service Logs
 ```bash
 # View payment service logs
-sudo journalctl -u paya-backend | grep -i payment
+sudo journalctl -u monte-backend | grep -i payment
 
 # Check for specific errors
-grep -i "stellar.*error" /var/log/paya/error.log | tail -50
+grep -i "stellar.*error" /var/log/monte/error.log | tail -50
 ```
 
 ### Resolution Steps
@@ -363,7 +363,7 @@ curl -s https://horizon.stellar.org/
 # Notify users of network issues
 
 # Update status page
-curl -X POST https://status.paya.io/api/update \
+curl -X POST https://status.monte.io/api/update \
   -d '{"status":"degraded","message":"Stellar network experiencing issues"}'
 ```
 
@@ -427,7 +427,7 @@ curl -s http://localhost:3000/metrics | grep error_rate
 curl -s http://localhost:3000/metrics | grep "status=\"5"
 
 # Check error logs
-tail -100 /var/log/paya/error.log
+tail -100 /var/log/monte/error.log
 ```
 
 ### Troubleshooting Steps
@@ -438,10 +438,10 @@ tail -100 /var/log/paya/error.log
 curl -s http://localhost:3000/metrics | grep error | sort
 
 # Check recent errors
-grep -i error /var/log/paya/error.log | tail -100 | awk '{print $NF}' | sort | uniq -c
+grep -i error /var/log/monte/error.log | tail -100 | awk '{print $NF}' | sort | uniq -c
 
 # Check specific endpoint errors
-grep "POST /api/v1/payments" /var/log/paya/access.log | grep " 5"
+grep "POST /api/v1/payments" /var/log/monte/access.log | grep " 5"
 ```
 
 #### 2. Check Recent Changes
@@ -453,7 +453,7 @@ git log --oneline -5
 git diff HEAD~1 .env
 
 # Check recent database changes
-psql -U postgres -d paya -c "SELECT * FROM schema_migrations ORDER BY version DESC LIMIT 5;"
+psql -U postgres -d monte -c "SELECT * FROM schema_migrations ORDER BY version DESC LIMIT 5;"
 ```
 
 ### Resolution Steps
@@ -463,7 +463,7 @@ psql -U postgres -d paya -c "SELECT * FROM schema_migrations ORDER BY version DE
 # Rollback deployment
 git checkout <previous_commit>
 npm run build
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Verify fix
 curl http://localhost:3000/api/v1/health
@@ -472,7 +472,7 @@ curl http://localhost:3000/api/v1/health
 #### Scenario 2: Database Schema Issue
 ```bash
 # Check for missing columns
-psql -U postgres -d paya -c "\d subscriptions"
+psql -U postgres -d monte -c "\d subscriptions"
 
 # Revert last migration
 npm run migration:revert
@@ -489,7 +489,7 @@ curl -s https://status.stellar.org/
 
 # If third-party is down, implement circuit breaker
 # Disable failing feature
-curl -X POST https://api.paya.io/api/v1/features/disable \
+curl -X POST https://api.monte.io/api/v1/features/disable \
   -d '{"feature":"email_notifications"}'
 ```
 
@@ -529,7 +529,7 @@ curl -s http://localhost:3000/metrics | grep request_duration
 curl -s http://localhost:3000/metrics | grep "quantile=\"0.95"
 
 # Check database query times
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT query, mean_exec_time, calls
   FROM pg_stat_statements
   ORDER BY mean_exec_time DESC
@@ -542,7 +542,7 @@ psql -U postgres -d paya -c "
 #### 1. Check Database Performance
 ```bash
 # Check slow queries
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT query, mean_exec_time, calls, total_exec_time
   FROM pg_stat_statements
   ORDER BY mean_exec_time DESC
@@ -550,7 +550,7 @@ psql -U postgres -d paya -c "
 "
 
 # Check cache hit ratio
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) AS cache_hit_ratio
   FROM pg_statio_user_tables;
 "
@@ -588,7 +588,7 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:3000/api/v1/payments
 #### Scenario 1: Slow Database Queries
 ```bash
 # Identify slow query
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT query, mean_exec_time
   FROM pg_stat_statements
   ORDER BY mean_exec_time DESC
@@ -621,7 +621,7 @@ redis-cli INFO stats | grep keyspace
 top -bn1 | head -20
 
 # Scale horizontally
-kubectl scale deployment paya-backend --replicas=5
+kubectl scale deployment monte-backend --replicas=5
 
 # Or scale vertically (increase instance size)
 ```
@@ -633,7 +633,7 @@ free -h
 ps aux | grep node | awk '{print $4}'
 
 # Restart service
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Investigate memory leak
 # Use heap profiling tools
@@ -658,13 +658,13 @@ sudo systemctl restart paya-backend
 ### Initial Assessment
 ```bash
 # Check authentication logs
-grep -i "auth" /var/log/paya/access.log | tail -100
+grep -i "auth" /var/log/monte/access.log | tail -100
 
 # Check failed login attempts
-grep -i "401\|403" /var/log/paya/access.log | tail -100
+grep -i "401\|403" /var/log/monte/access.log | tail -100
 
 # Check for suspicious IP addresses
-awk '{print $1}' /var/log/paya/access.log | sort | uniq -c | sort -rn | head -20
+awk '{print $1}' /var/log/monte/access.log | sort | uniq -c | sort -rn | head -20
 ```
 
 ### Troubleshooting Steps
@@ -672,7 +672,7 @@ awk '{print $1}' /var/log/paya/access.log | sort | uniq -c | sort -rn | head -20
 #### 1. Identify Scope
 ```bash
 # Check affected accounts
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT user_id, COUNT(*) 
   FROM auth_logs 
   WHERE success = false 
@@ -682,7 +682,7 @@ psql -U postgres -d paya -c "
 "
 
 # Check data access logs
-grep -i "SELECT\|UPDATE\|DELETE" /var/log/paya/query.log | tail -100
+grep -i "SELECT\|UPDATE\|DELETE" /var/log/monte/query.log | tail -100
 ```
 
 #### 2. Contain Incident
@@ -691,7 +691,7 @@ grep -i "SELECT\|UPDATE\|DELETE" /var/log/paya/query.log | tail -100
 iptables -A INPUT -s <suspicious_ip> -j DROP
 
 # Disable affected accounts
-psql -U postgres -d paya -c "UPDATE users SET status = 'disabled' WHERE user_id = '<affected_user>';"
+psql -U postgres -d monte -c "UPDATE users SET status = 'disabled' WHERE user_id = '<affected_user>';"
 
 # Revoke compromised sessions
 redis-cli DEL "session:<session_id>"
@@ -702,7 +702,7 @@ redis-cli DEL "session:<session_id>"
 #### Scenario 1: Brute Force Attack
 ```bash
 # Identify attacking IPs
-awk '{print $1}' /var/log/paya/access.log | sort | uniq -c | sort -rn | head -20
+awk '{print $1}' /var/log/monte/access.log | sort | uniq -c | sort -rn | head -20
 
 # Block IPs
 iptables -A INPUT -s <attacking_ip> -j DROP
@@ -716,7 +716,7 @@ iptables -A INPUT -s <attacking_ip> -j DROP
 #### Scenario 2: Data Breach
 ```bash
 # Identify affected data
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT * FROM users 
   WHERE last_login > now() - interval '24 hours'
   AND last_login < now() - interval '1 hour';
@@ -726,7 +726,7 @@ psql -U postgres -d paya -c "
 # Send security alert emails
 
 # Reset passwords
-psql -U postgres -d paya -c "UPDATE users SET password_reset_required = true WHERE user_id IN (...);"
+psql -U postgres -d monte -c "UPDATE users SET password_reset_required = true WHERE user_id IN (...);"
 
 # Audit logs
 # Preserve evidence for investigation
@@ -869,7 +869,7 @@ soroban account balance --id $PAYMENT_CONTRACT_ID --network mainnet
 curl -s http://localhost:3000/metrics | grep webhook_delivery
 
 # Check webhook logs
-grep -i webhook /var/log/paya/error.log | tail -50
+grep -i webhook /var/log/monte/error.log | tail -50
 
 # Check webhook queue
 redis-cli LLEN webhook-delivery
@@ -880,16 +880,16 @@ redis-cli LLEN webhook-delivery
 #### 1. Check Webhook Configuration
 ```bash
 # Check registered webhooks
-psql -U postgres -d paya -c "SELECT * FROM webhooks WHERE status = 'ACTIVE';"
+psql -U postgres -d monte -c "SELECT * FROM webhooks WHERE status = 'ACTIVE';"
 
 # Check webhook URLs
-psql -U postgres -d paya -c "SELECT url, status FROM webhooks;"
+psql -U postgres -d monte -c "SELECT url, status FROM webhooks;"
 ```
 
 #### 2. Check Delivery Logs
 ```bash
 # Check webhook delivery logs
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT * FROM webhook_deliveries 
   WHERE status = 'FAILED' 
   ORDER BY created_at DESC 
@@ -897,7 +897,7 @@ psql -U postgres -d paya -c "
 "
 
 # Check error messages
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT error_message, COUNT(*) 
   FROM webhook_deliveries 
   WHERE status = 'FAILED' 
@@ -910,14 +910,14 @@ psql -U postgres -d paya -c "
 #### Scenario 1: Webhook Endpoint Down
 ```bash
 # Check webhook status
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT url, failure_count 
   FROM webhooks 
   WHERE failure_count > 5;
 "
 
 # Disable failing webhooks
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   UPDATE webhooks 
   SET status = 'DISABLED' 
   WHERE webhook_id = '<webhook_id>';
@@ -930,10 +930,10 @@ psql -U postgres -d paya -c "
 #### Scenario 2: Signature Verification Failed
 ```bash
 # Check webhook secret
-psql -U postgres -d paya -c "SELECT secret FROM webhooks WHERE webhook_id = '<webhook_id>';"
+psql -U postgres -d monte -c "SELECT secret FROM webhooks WHERE webhook_id = '<webhook_id>';"
 
 # Regenerate secret
-curl -X POST https://api.paya.io/api/v1/notifications/webhooks/<webhook_id>/regenerate-secret
+curl -X POST https://api.monte.io/api/v1/notifications/webhooks/<webhook_id>/regenerate-secret
 
 # Update webhook owner with new secret
 ```
@@ -941,7 +941,7 @@ curl -X POST https://api.paya.io/api/v1/notifications/webhooks/<webhook_id>/rege
 #### Scenario 3: Webhook Timeout
 ```bash
 # Check response times
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT AVG(response_time) 
   FROM webhook_deliveries 
   WHERE webhook_id = '<webhook_id>';
@@ -975,6 +975,6 @@ pm2 scale webhook-worker 5
 ## Support
 
 For runbook issues, contact:
-- **DevOps Team**: devops@paya.io
+- **DevOps Team**: devops@monte.io
 - **On-Call**: +1-555-0123 (24/7)
-- **Slack**: #paya-ops
+- **Slack**: #monte-ops

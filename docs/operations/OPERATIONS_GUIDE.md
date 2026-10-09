@@ -1,4 +1,4 @@
-# Paya Platform Operations Guide
+# Monte Platform Operations Guide
 
 ## Table of Contents
 1. [Service Startup/Shutdown](#service-startupshutdown)
@@ -17,19 +17,19 @@
 **Using Systemd:**
 ```bash
 # Start service
-sudo systemctl start paya-backend
+sudo systemctl start monte-backend
 
 # Enable auto-start on boot
-sudo systemctl enable paya-backend
+sudo systemctl enable monte-backend
 
 # Check status
-sudo systemctl status paya-backend
+sudo systemctl status monte-backend
 ```
 
 **Using PM2:**
 ```bash
 # Start service
-pm2 start dist/main.js --name paya-backend
+pm2 start dist/main.js --name monte-backend
 
 # Start with ecosystem file
 pm2 start ecosystem.config.js
@@ -42,7 +42,7 @@ pm2 save
 **Using Docker:**
 ```bash
 # Start container
-docker start paya-backend
+docker start monte-backend
 
 # Start with docker-compose
 docker-compose up -d backend
@@ -53,16 +53,16 @@ docker-compose up -d backend
 **Using Systemd:**
 ```bash
 # Stop service
-sudo systemctl stop paya-backend
+sudo systemctl stop monte-backend
 
 # Check if stopped
-sudo systemctl status paya-backend
+sudo systemctl status monte-backend
 ```
 
 **Using PM2:**
 ```bash
 # Stop service
-pm2 stop paya-backend
+pm2 stop monte-backend
 
 # Stop all services
 pm2 stop all
@@ -71,7 +71,7 @@ pm2 stop all
 **Using Docker:**
 ```bash
 # Stop container
-docker stop paya-backend
+docker stop monte-backend
 
 # Stop with docker-compose
 docker-compose down
@@ -81,10 +81,10 @@ docker-compose down
 
 ```bash
 # Send SIGTERM for graceful shutdown
-sudo systemctl kill -s SIGTERM paya-backend
+sudo systemctl kill -s SIGTERM monte-backend
 
 # Or using PM2
-pm2 gracefulReload paya-backend
+pm2 gracefulReload monte-backend
 
 # Wait for in-flight requests to complete
 sleep 30
@@ -109,7 +109,7 @@ sudo systemctl status nginx
 **Using Docker:**
 ```bash
 # Start container
-docker start paya-frontend
+docker start monte-frontend
 
 # Start with docker-compose
 docker-compose up -d frontend
@@ -122,7 +122,7 @@ docker-compose up -d frontend
 sudo systemctl stop nginx
 
 # Stop Docker container
-docker stop paya-frontend
+docker stop monte-frontend
 ```
 
 ### Redis Service
@@ -134,7 +134,7 @@ docker stop paya-frontend
 sudo systemctl start redis
 
 # Using Docker
-docker start paya-redis
+docker start monte-redis
 
 # Check status
 redis-cli ping
@@ -147,7 +147,7 @@ redis-cli ping
 sudo systemctl stop redis
 
 # Using Docker
-docker stop paya-redis
+docker stop monte-redis
 ```
 
 ### PostgreSQL Service
@@ -181,7 +181,7 @@ sudo systemctl status postgresql
 #!/bin/bash
 # start-all-services.sh
 
-echo "Starting Paya Platform Services..."
+echo "Starting Monte Platform Services..."
 
 # Start PostgreSQL
 echo "Starting PostgreSQL..."
@@ -195,7 +195,7 @@ sleep 2
 
 # Start Backend
 echo "Starting Backend..."
-sudo systemctl start paya-backend
+sudo systemctl start monte-backend
 sleep 5
 
 # Start Frontend
@@ -208,7 +208,7 @@ echo "All services started successfully"
 echo "Verifying services..."
 sudo systemctl status postgresql | grep "active (running)"
 sudo systemctl status redis | grep "active (running)"
-sudo systemctl status paya-backend | grep "active (running)"
+sudo systemctl status monte-backend | grep "active (running)"
 sudo systemctl status nginx | grep "active (running)"
 ```
 
@@ -218,7 +218,7 @@ sudo systemctl status nginx | grep "active (running)"
 #!/bin/bash
 # stop-all-services.sh
 
-echo "Stopping Paya Platform Services..."
+echo "Stopping Monte Platform Services..."
 
 # Stop Frontend first (no dependencies)
 echo "Stopping Frontend..."
@@ -226,7 +226,7 @@ sudo systemctl stop nginx
 
 # Stop Backend
 echo "Stopping Backend..."
-sudo systemctl stop paya-backend
+sudo systemctl stop monte-backend
 
 # Stop Redis
 echo "Stopping Redis..."
@@ -258,7 +258,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=your_secure_password
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 DATABASE_SYNCHRONIZE=false
 DATABASE_LOGGING=true
 
@@ -281,7 +281,7 @@ JWT_SECRET=your_jwt_secret_key_min_32_chars
 JWT_EXPIRATION=7d
 
 # Email
-EMAIL_FROM=noreply@paya.io
+EMAIL_FROM=noreply@monte.io
 SENDGRID_API_KEY=your_sendgrid_api_key
 
 # Webhook
@@ -292,7 +292,7 @@ RATE_LIMIT_TTL=60
 RATE_LIMIT_MAX=100
 
 # CORS
-CORS_ORIGIN=https://paya.io
+CORS_ORIGIN=https://monte.io
 ```
 
 #### Frontend Environment Variables
@@ -301,8 +301,8 @@ Create `.env` file in frontend directory:
 
 ```bash
 # API
-VITE_API_URL=https://api.paya.io
-VITE_WS_URL=wss://api.paya.io
+VITE_API_URL=https://api.monte.io
+VITE_WS_URL=wss://api.monte.io
 
 # Stellar
 VITE_STELLAR_NETWORK=mainnet
@@ -327,15 +327,15 @@ sudo apt update && sudo apt install vault
 vault server -dev
 
 # Store secrets
-vault kv put secret/paya/database \
+vault kv put secret/monte/database \
   user=postgres \
   password=your_password
 
-vault kv put secret/paya/jwt \
+vault kv put secret/monte/jwt \
   secret=your_jwt_secret
 
 # Retrieve secrets
-vault kv get secret/paya/database
+vault kv get secret/monte/database
 ```
 
 #### Using AWS Secrets Manager
@@ -343,12 +343,12 @@ vault kv get secret/paya/database
 ```bash
 # Store secret
 aws secretsmanager create-secret \
-  --name paya/database \
+  --name monte/database \
   --secret-string '{"user":"postgres","password":"your_password"}'
 
 # Retrieve secret
 aws secretsmanager get-secret-value \
-  --secret-id paya/database
+  --secret-id monte/database
 ```
 
 #### Using Environment File Encryption
@@ -422,10 +422,10 @@ fi
 
 ```bash
 # Using PM2 with ecosystem file
-pm2 reload paya-backend --update-env
+pm2 reload monte-backend --update-env
 
 # Or restart gracefully
-pm2 gracefulReload paya-backend
+pm2 gracefulReload monte-backend
 ```
 
 #### Update Configuration with Restart
@@ -435,7 +435,7 @@ pm2 gracefulReload paya-backend
 vim .env
 
 # Restart service
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Verify new configuration
 pm2 env 0
@@ -447,14 +447,14 @@ pm2 env 0
 
 #### Automated Daily Backup
 
-Create `/etc/cron.daily/paya-backup.sh`:
+Create `/etc/cron.daily/monte-backup.sh`:
 ```bash
 #!/bin/bash
 # Daily database backup
 
-BACKUP_DIR=/var/backups/paya
+BACKUP_DIR=/var/backups/monte
 DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_FILE=$BACKUP_DIR/paya_$DATE.sql
+BACKUP_FILE=$BACKUP_DIR/monte_$DATE.sql
 
 # Create backup directory if it doesn't exist
 mkdir -p $BACKUP_DIR
@@ -466,43 +466,43 @@ PGPASSWORD=$DATABASE_PASSWORD pg_dump -h $DATABASE_HOST -U $DATABASE_USER -d $DA
 gzip $BACKUP_FILE
 
 # Keep only last 30 days of backups
-find $BACKUP_DIR -name "paya_*.sql.gz" -mtime +30 -delete
+find $BACKUP_DIR -name "monte_*.sql.gz" -mtime +30 -delete
 
 # Upload to S3 (optional)
-aws s3 cp $BACKUP_FILE.gz s3://paya-backups/database/
+aws s3 cp $BACKUP_FILE.gz s3://monte-backups/database/
 
 echo "Backup completed: $BACKUP_FILE.gz"
 ```
 
 Make it executable:
 ```bash
-sudo chmod +x /etc/cron.daily/paya-backup.sh
+sudo chmod +x /etc/cron.daily/monte-backup.sh
 ```
 
 #### Manual Backup
 
 ```bash
 # Full backup
-pg_dump -U postgres -h localhost -d paya > backup_$(date +%Y%m%d).sql
+pg_dump -U postgres -h localhost -d monte > backup_$(date +%Y%m%d).sql
 
 # Compressed backup
-pg_dump -U postgres -h localhost -d paya | gzip > backup_$(date +%Y%m%d).sql.gz
+pg_dump -U postgres -h localhost -d monte | gzip > backup_$(date +%Y%m%d).sql.gz
 
 # Schema only
-pg_dump -U postgres -h localhost -d paya --schema-only > schema_$(date +%Y%m%d).sql
+pg_dump -U postgres -h localhost -d monte --schema-only > schema_$(date +%Y%m%d).sql
 
 # Data only
-pg_dump -U postgres -h localhost -d paya --data-only > data_$(date +%Y%m%d).sql
+pg_dump -U postgres -h localhost -d monte --data-only > data_$(date +%Y%m%d).sql
 ```
 
 #### Backup Specific Tables
 
 ```bash
 # Backup specific table
-pg_dump -U postgres -h localhost -d paya -t subscriptions > subscriptions_backup.sql
+pg_dump -U postgres -h localhost -d monte -t subscriptions > subscriptions_backup.sql
 
 # Backup multiple tables
-pg_dump -U postgres -h localhost -d paya -t subscriptions -t invoices > backup.sql
+pg_dump -U postgres -h localhost -d monte -t subscriptions -t invoices > backup.sql
 ```
 
 ### Configuration Backup
@@ -511,20 +511,20 @@ pg_dump -U postgres -h localhost -d paya -t subscriptions -t invoices > backup.s
 #!/bin/bash
 # Backup configuration files
 
-BACKUP_DIR=/var/backups/paya/config
+BACKUP_DIR=/var/backups/monte/config
 DATE=$(date +%Y%m%d_%H%M%S)
 
 mkdir -p $BACKUP_DIR
 
 # Backup environment files
-cp /home/paya/backend/.env $BACKUP_DIR/.env_$DATE
-cp /home/paya/frontend/.env $BACKUP_DIR/frontend.env_$DATE
+cp /home/monte/backend/.env $BACKUP_DIR/.env_$DATE
+cp /home/monte/frontend/.env $BACKUP_DIR/frontend.env_$DATE
 
 # Backup Nginx configuration
-cp /etc/nginx/sites-available/paya $BACKUP_DIR/nginx_$DATE
+cp /etc/nginx/sites-available/monte $BACKUP_DIR/nginx_$DATE
 
 # Backup systemd service files
-cp /etc/systemd/system/paya-backend.service $BACKUP_DIR/paya-backend.service_$DATE
+cp /etc/systemd/system/monte-backend.service $BACKUP_DIR/monte-backend.service_$DATE
 
 # Compress
 tar -czf $BACKUP_DIR/config_$DATE.tar.gz $BACKUP_DIR/*_$DATE
@@ -549,24 +549,24 @@ if [ -z "$BACKUP_FILE" ]; then
 fi
 
 # Stop application
-sudo systemctl stop paya-backend
+sudo systemctl stop monte-backend
 
 # Restore database
 if [[ $BACKUP_FILE == *.gz ]]; then
-  gunzip -c $BACKUP_FILE | psql -U postgres -d paya
+  gunzip -c $BACKUP_FILE | psql -U postgres -d monte
 else
-  psql -U postgres -d paya < $BACKUP_FILE
+  psql -U postgres -d monte < $BACKUP_FILE
 fi
 
 # Start application
-sudo systemctl start paya-backend
+sudo systemctl start monte-backend
 
 echo "Database restored from $BACKUP_FILE"
 ```
 
 Usage:
 ```bash
-./restore-database.sh /var/backups/paya/paya_20240101.sql.gz
+./restore-database.sh /var/backups/monte/monte_20240101.sql.gz
 ```
 
 #### Point-in-Time Recovery
@@ -593,21 +593,21 @@ sudo tail -f /var/log/postgresql/postgresql-14-main.log
 
 ```bash
 # Extract backup
-tar -xzf /var/backups/paya/config/config_20240101.tar.gz -C /tmp
+tar -xzf /var/backups/monte/config/config_20240101.tar.gz -C /tmp
 
 # Restore environment files
-cp /tmp/.env_20240101 /home/paya/backend/.env
-cp /tmp/frontend.env_20240101 /home/paya/frontend/.env
+cp /tmp/.env_20240101 /home/monte/backend/.env
+cp /tmp/frontend.env_20240101 /home/monte/frontend/.env
 
 # Restore Nginx configuration
-cp /tmp/nginx_20240101 /etc/nginx/sites-available/paya
+cp /tmp/nginx_20240101 /etc/nginx/sites-available/monte
 sudo nginx -t
 sudo systemctl reload nginx
 
 # Restore systemd service
-cp /tmp/paya-backend.service_20240101 /etc/systemd/system/paya-backend.service
+cp /tmp/monte-backend.service_20240101 /etc/systemd/system/monte-backend.service
 sudo systemctl daemon-reload
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 ```
 
 ### Backup Verification
@@ -626,18 +626,18 @@ fi
 
 # Restore to test database
 if [[ $BACKUP_FILE == *.gz ]]; then
-  gunzip -c $BACKUP_FILE | psql -U postgres -d paya_test
+  gunzip -c $BACKUP_FILE | psql -U postgres -d monte_test
 else
-  psql -U postgres -d paya_test < $BACKUP_FILE
+  psql -U postgres -d monte_test < $BACKUP_FILE
 fi
 
 # Verify table count
-TABLE_COUNT=$(psql -U postgres -d paya_test -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public';")
+TABLE_COUNT=$(psql -U postgres -d monte_test -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public';")
 
 echo "Backup verified: $TABLE_COUNT tables restored"
 
 # Clean up test database
-psql -U postgres -c "DROP DATABASE paya_test;"
+psql -U postgres -c "DROP DATABASE monte_test;"
 ```
 
 ## Log Management
@@ -649,50 +649,50 @@ psql -U postgres -c "DROP DATABASE paya_test;"
 **Systemd:**
 ```bash
 # View logs
-sudo journalctl -u paya-backend -f
+sudo journalctl -u monte-backend -f
 
 # View last 100 lines
-sudo journalctl -u paya-backend -n 100
+sudo journalctl -u monte-backend -n 100
 
 # View logs since specific time
-sudo journalctl -u paya-backend --since "2024-01-01 00:00:00"
+sudo journalctl -u monte-backend --since "2024-01-01 00:00:00"
 ```
 
 **PM2:**
 ```bash
 # View logs
-pm2 logs paya-backend
+pm2 logs monte-backend
 
 # View last 100 lines
-pm2 logs paya-backend --lines 100
+pm2 logs monte-backend --lines 100
 
 # View error logs only
-pm2 logs paya-backend --err
+pm2 logs monte-backend --err
 ```
 
 **Docker:**
 ```bash
 # View logs
-docker logs -f paya-backend
+docker logs -f monte-backend
 
 # View last 100 lines
-docker logs --tail 100 paya-backend
+docker logs --tail 100 monte-backend
 ```
 
 #### Application Logs
 
 ```bash
 # Application logs directory
-/var/log/paya/
+/var/log/monte/
 
 # Error log
-/var/log/paya/error.log
+/var/log/monte/error.log
 
 # Access log
-/var/log/paya/access.log
+/var/log/monte/access.log
 
 # Payment log
-/var/log/paya/payments.log
+/var/log/monte/payments.log
 ```
 
 #### Database Logs
@@ -709,36 +709,36 @@ sudo tail -f /var/log/postgresql/postgresql-14-main.err
 
 ```bash
 # Access log
-sudo tail -f /var/log/nginx/paya-access.log
+sudo tail -f /var/log/nginx/monte-access.log
 
 # Error log
-sudo tail -f /var/log/nginx/paya-error.log
+sudo tail -f /var/log/nginx/monte-error.log
 ```
 
 ### Log Rotation
 
 #### Configure Logrotate for Application Logs
 
-Create `/etc/logrotate.d/paya`:
+Create `/etc/logrotate.d/monte`:
 ```
-/var/log/paya/*.log {
+/var/log/monte/*.log {
   daily
   rotate 30
   compress
   delaycompress
   notifempty
-  create 0640 paya paya
+  create 0640 monte monte
   sharedscripts
   postrotate
-    systemctl reload paya-backend > /dev/null 2>&1 || true
+    systemctl reload monte-backend > /dev/null 2>&1 || true
   endscript
 }
 ```
 
 Test logrotate:
 ```bash
-sudo logrotate -d /etc/logrotate.d/paya
-sudo logrotate -f /etc/logrotate.d/paya
+sudo logrotate -d /etc/logrotate.d/monte
+sudo logrotate -f /etc/logrotate.d/monte
 ```
 
 #### Configure PostgreSQL Log Rotation
@@ -796,26 +796,26 @@ sudo systemctl start promtail
 
 ```bash
 # Search for errors in backend logs
-sudo journalctl -u paya-backend | grep -i error
+sudo journalctl -u monte-backend | grep -i error
 
 # Search for specific error code
-sudo journalctl -u paya-backend | grep "500"
+sudo journalctl -u monte-backend | grep "500"
 
 # Search for payment failures
-grep -i "payment.*failed" /var/log/paya/payments.log
+grep -i "payment.*failed" /var/log/monte/payments.log
 ```
 
 #### Analyze Access Patterns
 
 ```bash
 # Count requests by endpoint
-awk '{print $7}' /var/log/nginx/paya-access.log | sort | uniq -c | sort -rn
+awk '{print $7}' /var/log/nginx/monte-access.log | sort | uniq -c | sort -rn
 
 # Find slow requests
-awk '$11 > 1.0 {print $0}' /var/log/nginx/paya-access.log
+awk '$11 > 1.0 {print $0}' /var/log/nginx/monte-access.log
 
 # Find 5xx errors
-grep " 5" /var/log/nginx/paya-access.log | awk '{print $9}' | sort | uniq -c
+grep " 5" /var/log/nginx/monte-access.log | awk '{print $9}' | sort | uniq -c
 ```
 
 ## Monitoring Setup
@@ -841,7 +841,7 @@ sudo systemctl start prometheus
 sudo systemctl enable prometheus
 ```
 
-#### Configure Prometheus for Paya
+#### Configure Prometheus for Monte
 
 Edit `/etc/prometheus/prometheus.yml`:
 ```yaml
@@ -849,7 +849,7 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'paya-backend'
+  - job_name: 'monte-backend'
     static_configs:
       - targets: ['localhost:3000']
     metrics_path: '/metrics'
@@ -954,7 +954,7 @@ else
 fi
 
 # Check replication lag (if applicable)
-LAG=$(psql -U postgres -d paya -t -c "SELECT EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp()))::int;")
+LAG=$(psql -U postgres -d monte -t -c "SELECT EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp()))::int;")
 if [ $LAG -lt 5 ]; then
   echo "Replication lag acceptable: ${LAG}s"
 else
@@ -1026,7 +1026,7 @@ fi
 echo "Running comprehensive health check..."
 
 # Check services
-services=("postgresql" "redis" "paya-backend" "nginx")
+services=("postgresql" "redis" "monte-backend" "nginx")
 for service in "${services[@]}"; do
   sudo systemctl status $service | grep "active (running)" > /dev/null
   if [ $? -eq 0 ]; then
@@ -1072,29 +1072,29 @@ echo "Health check completed"
 crontab -e
 
 # Run health check every 5 minutes
-*/5 * * * * /home/paya/scripts/comprehensive-health-check.sh >> /var/log/paya/health-check.log 2>&1
+*/5 * * * * /home/monte/scripts/comprehensive-health-check.sh >> /var/log/monte/health-check.log 2>&1
 
 # Run database backup daily at 2 AM
-0 2 * * * /etc/cron.daily/paya-backup.sh
+0 2 * * * /etc/cron.daily/monte-backup.sh
 ```
 
 #### Setup Uptime Monitoring
 
 Using UptimeRobot:
 1. Create account at https://uptimerobot.com
-2. Add monitor for https://api.paya.io/api/v1/health
+2. Add monitor for https://api.monte.io/api/v1/health
 3. Configure alert notifications (email, Slack, SMS)
 4. Set check interval to 1 minute
 
 Using StatusCake:
 1. Create account at https://www.statuscake.com
-2. Add uptime test for https://api.paya.io
+2. Add uptime test for https://api.monte.io
 3. Configure alert thresholds
 4. Set up public status page
 
 ## Support
 
 For operations issues, contact:
-- **DevOps Team**: devops@paya.io
+- **DevOps Team**: devops@monte.io
 - **On-Call**: +1-555-0123 (24/7)
-- **Slack**: #paya-ops
+- **Slack**: #monte-ops

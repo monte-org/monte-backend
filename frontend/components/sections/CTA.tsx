@@ -12,14 +12,14 @@ export function CTA() {
 
           <div className="relative mx-auto max-w-2xl text-center">
             <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-              Start integrating Paya
+              Start integrating Monte
             </h2>
             <p className="mt-4 text-pretty text-base leading-7 text-zinc-200">
               Build a crypto payment flow that looks and feels like modern fintech — with open-source
               infrastructure and Stellar settlement.
             </p>
             <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-              <Button href="https://github.com/StellarPaya/paya" variant="primary">
+              <Button href="https://github.com/StellarPaya/monte" variant="primary">
                 View on GitHub
               </Button>
               <Button href="#" variant="secondary">

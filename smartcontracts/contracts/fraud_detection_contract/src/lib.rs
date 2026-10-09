@@ -33,7 +33,7 @@ pub struct FraudStatistics {
 
 /// Fraud Detection Contract
 /// 
-/// This contract provides on-chain fraud detection capabilities for the Paya platform.
+/// This contract provides on-chain fraud detection capabilities for the Monte platform.
 /// It integrates with the payment registry to add fraud risk checks, freeze suspicious
 /// payments, and maintain fraud statistics for audit trails.
 /// 

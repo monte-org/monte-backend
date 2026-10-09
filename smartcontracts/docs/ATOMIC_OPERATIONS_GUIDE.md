@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the atomic cross-contract coordination system implemented for the Paya platform using the Saga pattern. The system ensures that multi-contract operations execute atomically - either all operations succeed or all are rolled back to maintain consistency.
+This document describes the atomic cross-contract coordination system implemented for the Monte platform using the Saga pattern. The system ensures that multi-contract operations execute atomically - either all operations succeed or all are rolled back to maintain consistency.
 
 ## Architecture
 
@@ -334,4 +334,4 @@ Monitor orchestration events:
 
 ## Conclusion
 
-The atomic cross-contract coordination system provides robust, consistent multi-contract operations for the Paya platform. The Saga pattern ensures that complex payment flows execute atomically, with automatic rollback on failure, gas optimization, and comprehensive security features.
+The atomic cross-contract coordination system provides robust, consistent multi-contract operations for the Monte platform. The Saga pattern ensures that complex payment flows execute atomically, with automatic rollback on failure, gas optimization, and comprehensive security features.

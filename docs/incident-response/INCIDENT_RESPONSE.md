@@ -1,4 +1,4 @@
-# Paya Platform Incident Response Guide
+# Monte Platform Incident Response Guide
 
 ## Table of Contents
 1. [Incident Classification](#incident-classification)
@@ -133,7 +133,7 @@ Declare an incident when:
 3. **Notify on-call engineer**
    ```bash
    # PagerDuty trigger
-   pd trigger paya-on-call
+   pd trigger monte-on-call
    ```
 
 4. **Document initial assessment**
@@ -157,13 +157,13 @@ Declare an incident when:
 **Commands**:
 ```bash
 # Check service status
-curl https://api.paya.io/api/v1/health
+curl https://api.monte.io/api/v1/health
 
 # Check error rates
-curl https://api.paya.io/api/v1/metrics | grep error_rate
+curl https://api.monte.io/api/v1/metrics | grep error_rate
 
 # Check database
-psql -U postgres -d paya -c "SELECT COUNT(*) FROM subscriptions;"
+psql -U postgres -d monte -c "SELECT COUNT(*) FROM subscriptions;"
 
 # Check Redis
 redis-cli ping
@@ -191,13 +191,13 @@ redis-cli info stats
 **Commands**:
 ```bash
 # View recent logs
-sudo journalctl -u paya-backend -n 1000
+sudo journalctl -u monte-backend -n 1000
 
 # Check error logs
-grep -i error /var/log/paya/error.log | tail -100
+grep -i error /var/log/monte/error.log | tail -100
 
 # Check database locks
-psql -U postgres -d paya -c "SELECT * FROM pg_stat_activity WHERE state != 'idle';"
+psql -U postgres -d monte -c "SELECT * FROM pg_stat_activity WHERE state != 'idle';"
 
 # Check recent deployments
 git log --oneline -5
@@ -224,16 +224,16 @@ git log --oneline -5
 # Rollback deployment
 git checkout <previous_commit>
 npm run build
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Scale infrastructure
-kubectl scale deployment paya-backend --replicas=5
+kubectl scale deployment monte-backend --replicas=5
 
 # Restart service
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Disable feature (via feature flag)
-curl -X POST https://api.paya.io/api/v1/features/disable --data '{"feature":"new_payment_flow"}'
+curl -X POST https://api.monte.io/api/v1/features/disable --data '{"feature":"new_payment_flow"}'
 ```
 
 #### Phase 4: Resolution and Recovery
@@ -256,13 +256,13 @@ curl -X POST https://api.paya.io/api/v1/features/disable --data '{"feature":"new
 **Commands**:
 ```bash
 # Verify health
-curl https://api.paya.io/api/v1/health
+curl https://api.monte.io/api/v1/health
 
 # Check error rates
-curl https://api.paya.io/api/v1/metrics | grep error_rate
+curl https://api.monte.io/api/v1/metrics | grep error_rate
 
 # Verify database
-psql -U postgres -d paya -c "SELECT COUNT(*) FROM subscriptions;"
+psql -U postgres -d monte -c "SELECT COUNT(*) FROM subscriptions;"
 
 # Run smoke tests
 npm run test:smoke
@@ -312,7 +312,7 @@ Next Update: [time]
 
 #### External Communication
 
-**Status Page**: https://status.paya.io
+**Status Page**: https://status.monte.io
 
 **Update Template**:
 ```
@@ -349,18 +349,18 @@ A post-mortem will be published within [X] days.
 - Secondary: +1-555-0102 (24/7)
 
 **Engineering Leadership**:
-- Engineering Lead: eng-lead@paya.io, +1-555-0201
-- CTO: cto@paya.io, +1-555-0202
+- Engineering Lead: eng-lead@monte.io, +1-555-0201
+- CTO: cto@monte.io, +1-555-0202
 
 **Executive Team**:
-- CEO: ceo@paya.io, +1-555-0301
-- COO: coo@paya.io, +1-555-0302
+- CEO: ceo@monte.io, +1-555-0301
+- COO: coo@monte.io, +1-555-0302
 
 **Product Team**:
-- Product Manager: pm@paya.io, +1-555-0401
+- Product Manager: pm@monte.io, +1-555-0401
 
 **Customer Support**:
-- Support Lead: support@paya.io, +1-555-0501
+- Support Lead: support@monte.io, +1-555-0501
 
 ### Escalation Triggers
 
@@ -425,7 +425,7 @@ Issue Details:
 
 Our team is actively investigating and working to resolve this issue.
 We will provide updates every [X] minutes on our status page:
-https://status.paya.io
+https://status.monte.io
 
 We apologize for any inconvenience.
 ```
@@ -640,5 +640,5 @@ Incident Commander: [Name]
 
 For incident response issues, contact:
 - **On-Call**: +1-555-0101 (24/7)
-- **Engineering Lead**: eng-lead@paya.io
-- **Slack**: #paya-incident-response
+- **Engineering Lead**: eng-lead@monte.io
+- **Slack**: #monte-incident-response

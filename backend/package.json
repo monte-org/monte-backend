@@ -1,7 +1,7 @@
 {
-  "name": "paya-backend",
+  "name": "monte-backend",
   "version": "0.1.0",
-  "description": "Paya Backend Services - NestJS",
+  "description": "Monte Backend Services - NestJS",
   "private": true,
   "scripts": {
     "build": "nest build",

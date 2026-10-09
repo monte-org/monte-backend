@@ -1,7 +1,7 @@
-# Paya MVP Summary
+# Monte MVP Summary
 
 ## Overview
-This document summarizes the improvements made to the Paya project to achieve a functioning MVP. The MVP includes smart contracts, a frontend application, API routes, and blockchain monitoring capabilities.
+This document summarizes the improvements made to the Monte project to achieve a functioning MVP. The MVP includes smart contracts, a frontend application, API routes, and blockchain monitoring capabilities.
 
 ## Completed Improvements
 
@@ -299,7 +299,7 @@ node frontend/watcher.js
 
 ## Conclusion
 
-The Paya MVP is now functioning with:
+The Monte MVP is now functioning with:
 - ✅ Working smart contracts (updated for soroban-sdk 20.5.0)
 - ✅ Modern, responsive frontend with excellent UX
 - ✅ Robust API routes with validation and error handling
@@ -308,4 +308,4 @@ The Paya MVP is now functioning with:
 - ✅ Environment configuration
 - ✅ Successful builds for all components
 
-The MVP provides a solid foundation for the full payment processing platform and demonstrates the core functionality of the Paya system.
+The MVP provides a solid foundation for the full payment processing platform and demonstrates the core functionality of the Monte system.

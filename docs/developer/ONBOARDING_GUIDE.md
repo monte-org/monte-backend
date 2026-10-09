@@ -1,4 +1,4 @@
-# Paya Developer Onboarding Guide
+# Monte Developer Onboarding Guide
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
@@ -11,9 +11,9 @@
 
 ## Project Overview
 
-### What is Paya?
+### What is Monte?
 
-Paya is a crypto payment infrastructure built on the Stellar network that enables merchants to accept cryptocurrency payments, manage subscriptions, and handle complex payment flows like escrow and payment splits.
+Monte is a crypto payment infrastructure built on the Stellar network that enables merchants to accept cryptocurrency payments, manage subscriptions, and handle complex payment flows like escrow and payment splits.
 
 ### Key Features
 
@@ -125,8 +125,8 @@ Before you begin, ensure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/0xNinx/paya.git
-cd paya
+git clone https://github.com/0xNinx/monte.git
+cd monte
 
 # Switch to the main branch
 git checkout main
@@ -161,10 +161,10 @@ npm install
 ```bash
 # Start PostgreSQL container
 docker run -d \
-  --name paya-db \
+  --name monte-db \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=paya \
+  -e POSTGRES_DB=monte \
   -p 5432:5432 \
   postgres:14
 ```
@@ -177,9 +177,9 @@ sudo apt install postgresql postgresql-contrib
 
 # Create database
 sudo -u postgres psql
-CREATE DATABASE paya;
-CREATE USER paya_user WITH PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE paya TO paya_user;
+CREATE DATABASE monte;
+CREATE USER monte_user WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE monte TO monte_user;
 \q
 ```
 
@@ -189,7 +189,7 @@ GRANT ALL PRIVILEGES ON DATABASE paya TO paya_user;
 ```bash
 # Start Redis container
 docker run -d \
-  --name paya-redis \
+  --name monte-redis \
   -p 6379:6379 \
   redis:7
 ```
@@ -225,7 +225,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 DATABASE_SYNCHRONIZE=true
 DATABASE_LOGGING=true
 
@@ -243,7 +243,7 @@ JWT_SECRET=your_jwt_secret_key_minimum_32_characters
 JWT_EXPIRATION=7d
 
 # Email (optional for development)
-EMAIL_FROM=noreply@paya.io
+EMAIL_FROM=noreply@monte.io
 SENDGRID_API_KEY=your_sendgrid_key
 
 # Webhook
@@ -708,7 +708,7 @@ npm run dev
 **Database Debugging:**
 ```bash
 # Connect to database
-psql -U postgres -d paya
+psql -U postgres -d monte
 
 # View tables
 \dt
@@ -795,9 +795,9 @@ docker-compose down -v
 
 ### Internal Resources
 
-- **Slack**: #paya-dev
-- **Confluence**: Paya Documentation
-- **Jira**: Paya Project Board
+- **Slack**: #monte-dev
+- **Confluence**: Monte Documentation
+- **Jira**: Monte Project Board
 
 ### External Resources
 
@@ -808,8 +808,8 @@ docker-compose down -v
 
 ### Contact
 
-- **Tech Lead**: tech-lead@paya.io
-- **DevOps**: devops@paya.io
+- **Tech Lead**: tech-lead@monte.io
+- **DevOps**: devops@monte.io
 - **On-Call**: +1-555-0123 (24/7)
 
 ## Next Steps
@@ -822,4 +822,4 @@ Now that you're set up, here's what to do next:
 4. **Ask questions**: Don't hesitate to ask for help
 5. **Contribute**: Start making contributions!
 
-Welcome to the Paya team! 🚀
+Welcome to the Monte team! 🚀

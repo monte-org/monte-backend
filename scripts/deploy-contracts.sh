@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Paya Contract Deployment Script
+# Monte Contract Deployment Script
 # This script deploys Soroban smart contracts to the Stellar testnet
 
 set -e
@@ -26,7 +26,7 @@ ESCROW_WASM="${CONTRACTS_DIR}/escrow_contract/target/wasm32-unknown-unknown/rele
 # Output file for contract IDs
 CONTRACT_IDS_FILE=".contract_ids"
 
-echo -e "${GREEN}=== Paya Contract Deployment Script ===${NC}"
+echo -e "${GREEN}=== Monte Contract Deployment Script ===${NC}"
 echo ""
 
 # Check prerequisites
@@ -125,7 +125,7 @@ ESCROW_ID=$(deploy_contract "Escrow" "$ESCROW_WASM" "-- initialize --admin $ADMI
 # Save contract IDs
 echo -e "${GREEN}=== Saving Contract IDs ===${NC}"
 cat > "$CONTRACT_IDS_FILE" << EOF
-# Paya Contract IDs
+# Monte Contract IDs
 # Generated on: $(date)
 
 PAYMENT_REGISTRY_CONTRACT_ID=$PAYMENT_REGISTRY_ID

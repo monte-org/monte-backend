@@ -8,7 +8,7 @@ export function Footer() {
       <Container>
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
           <div>
-            <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Paya</p>
+            <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Monte</p>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
               Open-source crypto payments with Stellar settlement.
             </p>
@@ -28,7 +28,7 @@ export function Footer() {
               Features
             </Link>
             <Link
-              href="https://github.com/StellarPaya/paya"
+              href="https://github.com/StellarPaya/monte"
               target="_blank"
               rel="noreferrer"
               className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
@@ -39,7 +39,7 @@ export function Footer() {
         </div>
 
         <p className="mt-8 text-xs text-zinc-500 dark:text-zinc-400">
-          MIT © {new Date().getFullYear()} Paya Contributors
+          MIT © {new Date().getFullYear()} Monte Contributors
         </p>
       </Container>
     </footer>

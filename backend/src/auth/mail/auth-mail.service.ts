@@ -9,7 +9,7 @@ export class AuthMailService {
   private readonly from: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.from = this.configService.get<string>('SMTP_FROM') || 'noreply@paya.io';
+    this.from = this.configService.get<string>('SMTP_FROM') || 'noreply@monte.io';
 
     const host = this.configService.get<string>('SMTP_HOST');
     const port = this.configService.get<string>('SMTP_PORT');
@@ -28,7 +28,7 @@ export class AuthMailService {
 
   async sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
     const resetUrl = `${this.configService.get<string>('NEXT_PUBLIC_SITE_URL') || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
-    const subject = 'Reset your Paya password';
+    const subject = 'Reset your Monte password';
     const text = `We received a request to reset your password. This link expires in 1 hour:\n\n${resetUrl}\n\nIf you did not request this, you can safely ignore this email.`;
 
     if (!this.transporter) {

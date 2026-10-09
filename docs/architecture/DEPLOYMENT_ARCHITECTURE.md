@@ -1,4 +1,4 @@
-# Paya Deployment Architecture
+# Monte Deployment Architecture
 
 ## Table of Contents
 1. [Containerization Strategy](#containerization-strategy)
@@ -98,13 +98,13 @@ dist
 **Registry Setup:**
 ```bash
 # Build and tag image
-docker build -t paya/backend:latest .
+docker build -t monte/backend:latest .
 
 # Tag for registry
-docker tag paya/backend:latest registry.paya.io/paya/backend:latest
+docker tag monte/backend:latest registry.monte.io/monte/backend:latest
 
 # Push to registry
-docker push registry.paya.io/paya/backend:latest
+docker push registry.monte.io/monte/backend:latest
 ```
 
 ## Orchestration
@@ -118,9 +118,9 @@ docker push registry.paya.io/paya/backend:latest
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: paya
+  name: monte
   labels:
-    name: paya
+    name: monte
     environment: production
 ```
 
@@ -132,7 +132,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: paya
+  namespace: monte
 spec:
   replicas: 3
   selector:
@@ -151,7 +151,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: registry.paya.io/paya/backend:latest
+        image: registry.monte.io/monte/backend:latest
         ports:
         - containerPort: 3000
         env:
@@ -201,7 +201,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend
-  namespace: paya
+  namespace: monte
 spec:
   selector:
     app: backend
@@ -219,8 +219,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: paya-ingress
-  namespace: paya
+  name: monte-ingress
+  namespace: monte
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -228,10 +228,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - api.paya.io
-    secretName: paya-tls
+    - api.monte.io
+    secretName: monte-tls
   rules:
-  - host: api.paya.io
+  - host: api.monte.io
     http:
       paths:
       - path: /
@@ -251,7 +251,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: backend-hpa
-  namespace: paya
+  namespace: monte
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -282,7 +282,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: paya
+  namespace: monte
 data:
   NODE_ENV: "production"
   API_PREFIX: "api/v1"
@@ -299,14 +299,14 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: db-secret
-  namespace: paya
+  namespace: monte
 type: Opaque
 stringData:
   host: "postgres-postgresql.postgres"
   port: "5432"
   user: "postgres"
   password: "your-password"
-  database: "paya"
+  database: "monte"
 ```
 
 ### StatefulSets for Database
@@ -317,7 +317,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: paya
+  namespace: monte
 spec:
   serviceName: postgres
   replicas: 1
@@ -336,7 +336,7 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_DB
-          value: "paya"
+          value: "monte"
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
@@ -375,8 +375,8 @@ on:
     branches: [main]
 
 env:
-  REGISTRY: registry.paya.io
-  IMAGE_NAME: paya/backend
+  REGISTRY: registry.monte.io
+  IMAGE_NAME: monte/backend
 
 jobs:
   test:
@@ -387,7 +387,7 @@ jobs:
         image: postgres:14
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: paya_test
+          POSTGRES_DB: monte_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -436,7 +436,7 @@ jobs:
         DATABASE_PORT: 5432
         DATABASE_USER: postgres
         DATABASE_PASSWORD: postgres
-        DATABASE_NAME: paya_test
+        DATABASE_NAME: monte_test
         REDIS_HOST: localhost
         REDIS_PORT: 6379
 
@@ -484,13 +484,13 @@ jobs:
     
     - name: Deploy to staging
       run: |
-        kubectl set image deployment/backend backend=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -n paya-staging
-        kubectl rollout status deployment/backend -n paya-staging
+        kubectl set image deployment/backend backend=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -n monte-staging
+        kubectl rollout status deployment/backend -n monte-staging
     
     - name: Run smoke tests
       run: |
-        kubectl run smoke-test --image=curlimages/curl --rm -n paya-staging --restart=Never -- \
-          curl --fail http://backend-service.paya-staging.svc.cluster.local/health
+        kubectl run smoke-test --image=curlimages/curl --rm -n monte-staging --restart=Never -- \
+          curl --fail http://backend-service.monte-staging.svc.cluster.local/health
 
   deploy-production:
     needs: build
@@ -508,13 +508,13 @@ jobs:
     
     - name: Deploy to production
       run: |
-        kubectl set image deployment/backend backend=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -n paya
-        kubectl rollout status deployment/backend -n paya
+        kubectl set image deployment/backend backend=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -n monte
+        kubectl rollout status deployment/backend -n monte
     
     - name: Verify deployment
       run: |
-        kubectl run smoke-test --image=curlimages/curl --rm -n paya --restart=Never -- \
-          curl --fail http://backend-service.paya.svc.cluster.local/health
+        kubectl run smoke-test --image=curlimages/curl --rm -n monte --restart=Never -- \
+          curl --fail http://backend-service.monte.svc.cluster.local/health
     
     - name: Notify team
       uses: slackapi/slack-github-action@v1
@@ -533,13 +533,13 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migration-job
-  namespace: paya
+  namespace: monte
 spec:
   template:
     spec:
       containers:
       - name: migration
-        image: registry.paya.io/paya/backend:latest
+        image: registry.monte.io/monte/backend:latest
         command: ["npm", "run", "migration:run"]
         env:
         - name: DATABASE_HOST
@@ -612,8 +612,8 @@ kubectl apply -f k8s/production/
 ```yaml
 # Chart.yaml
 apiVersion: v2
-name: paya
-description: Paya payment infrastructure
+name: monte
+description: Monte payment infrastructure
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
@@ -624,14 +624,14 @@ appVersion: "1.0.0"
 replicaCount: 3
 
 image:
-  repository: registry.paya.io/paya/backend
+  repository: registry.monte.io/monte/backend
   pullPolicy: IfNotPresent
   tag: "latest"
 
 database:
   host: "postgres-postgresql.postgres"
   port: 5432
-  name: paya
+  name: monte
   user: postgres
   existingSecret: db-secret
 
@@ -854,20 +854,20 @@ export class MetricsService {
 
   constructor() {
     this.httpRequestsTotal = new Counter({
-      name: 'paya_http_requests_total',
+      name: 'monte_http_requests_total',
       help: 'Total number of HTTP requests',
       labelNames: ['method', 'route', 'status'],
     });
 
     this.httpRequestDuration = new Histogram({
-      name: 'paya_http_request_duration_seconds',
+      name: 'monte_http_request_duration_seconds',
       help: 'HTTP request duration in seconds',
       labelNames: ['method', 'route'],
       buckets: [0.1, 0.5, 1, 2, 5],
     });
 
     this.activeConnections = new Gauge({
-      name: 'paya_active_connections',
+      name: 'monte_active_connections',
       help: 'Number of active connections',
     });
   }
@@ -891,7 +891,7 @@ import { trace } from '@opentelemetry/api';
 
 @Injectable()
 export class TracingService {
-  private tracer = trace.getTracer('paya-backend');
+  private tracer = trace.getTracer('monte-backend');
 
   async traceOperation<T>(
     name: string,
@@ -926,7 +926,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: postgres-backup
-  namespace: paya
+  namespace: monte
 spec:
   schedule: "0 2 * * *"  # Daily at 2 AM
   jobTemplate:
@@ -941,7 +941,7 @@ spec:
             - -c
             - |
               pg_dump -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME | gzip > /backup/backup_$(date +%Y%m%d_%H%M%S).sql.gz
-              aws s3 cp /backup/backup_*.sql.gz s3://paya-backups/database/
+              aws s3 cp /backup/backup_*.sql.gz s3://monte-backups/database/
             env:
             - name: DATABASE_HOST
               valueFrom:
@@ -991,7 +991,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: config-backup
-  namespace: paya
+  namespace: monte
 spec:
   schedule: "0 3 * * *"  # Daily at 3 AM
   jobTemplate:
@@ -1005,9 +1005,9 @@ spec:
             - /bin/sh
             - -c
             - |
-              kubectl get configmaps -n paya -o yaml > /backup/configmaps_$(date +%Y%m%d_%H%M%S).yaml
-              kubectl get secrets -n paya -o yaml > /backup/secrets_$(date +%Y%m%d_%H%M%S).yaml
-              aws s3 cp /backup/* s3://paya-backups/config/
+              kubectl get configmaps -n monte -o yaml > /backup/configmaps_$(date +%Y%m%d_%H%M%S).yaml
+              kubectl get secrets -n monte -o yaml > /backup/secrets_$(date +%Y%m%d_%H%M%S).yaml
+              aws s3 cp /backup/* s3://monte-backups/config/
             env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -1035,7 +1035,7 @@ spec:
 
 ```bash
 # Restore from backup
-aws s3 cp s3://paya-backups/database/backup_20240101_020000.sql.gz /tmp/
+aws s3 cp s3://monte-backups/database/backup_20240101_020000.sql.gz /tmp/
 gunzip /tmp/backup_20240101_020000.sql.gz
 psql -h $DATABASE_HOST -U $DATABASE_USER -d $DATABASE_NAME < /tmp/backup_20240101_020000.sql
 ```
@@ -1051,7 +1051,7 @@ echo "recovery_target_time = '2024-01-01 12:00:00'" >> postgresql.conf
 touch /var/lib/postgresql/main/recovery.signal
 
 # Restart PostgreSQL
-kubectl rollout restart statefulset/postgres -n paya
+kubectl rollout restart statefulset/postgres -n monte
 ```
 
 ### High Availability
@@ -1069,10 +1069,10 @@ regions:
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
 metadata:
-  name: paya-api
+  name: monte-api
 spec:
   endpoints:
-  - DNSName: api.paya.io
+  - DNSName: api.monte.io
     recordTTL: 60
     recordType: A
     targets:
@@ -1089,7 +1089,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres-replica
-  namespace: paya
+  namespace: monte
 spec:
   replicas: 2
   serviceName: postgres-replica
@@ -1120,29 +1120,29 @@ spec:
 
 ```bash
 # Check pod status
-kubectl get pods -n paya
+kubectl get pods -n monte
 
 # Delete failing pod
-kubectl delete pod backend-xxxxx -n paya
+kubectl delete pod backend-xxxxx -n monte
 
 # Verify new pod is running
-kubectl get pods -n paya -w
+kubectl get pods -n monte -w
 ```
 
 #### Database Failover
 
 ```bash
 # Promote replica to master
-kubectl exec -it postgres-replica-0 -n paya -- pg_ctl promote
+kubectl exec -it postgres-replica-0 -n monte -- pg_ctl promote
 
 # Update connection strings
-kubectl patch configmap db-config -n paya --type='json' \
+kubectl patch configmap db-config -n monte --type='json' \
   --patch='[{"op": "replace", "path": "/data/host", "value":"postgres-replica-0.postgres"}]'
 ```
 
 ## Support
 
 For deployment architecture questions, contact:
-- **DevOps Team**: devops@paya.io
-- **Infrastructure Team**: infra@paya.io
-- **Slack**: #paya-deployment
+- **DevOps Team**: devops@monte.io
+- **Infrastructure Team**: infra@monte.io
+- **Slack**: #monte-deployment

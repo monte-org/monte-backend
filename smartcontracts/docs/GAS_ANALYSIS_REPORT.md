@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This report analyzes the gas costs of the atomic cross-contract coordination system implemented for the Paya platform. The implementation achieves significant gas savings through batching operations, efficient checkpoint management, and optimized storage patterns.
+This report analyzes the gas costs of the atomic cross-contract coordination system implemented for the Monte platform. The implementation achieves significant gas savings through batching operations, efficient checkpoint management, and optimized storage patterns.
 
 ## Methodology
 

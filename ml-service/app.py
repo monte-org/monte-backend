@@ -13,7 +13,7 @@ from datetime import datetime
 import networkx as nx
 from imblearn.over_sampling import SMOTE
 
-app = FastAPI(title="Paya Fraud Detection ML Service")
+app = FastAPI(title="Monte Fraud Detection ML Service")
 
 # Global variables for models
 models = {

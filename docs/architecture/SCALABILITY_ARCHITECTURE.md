@@ -1,4 +1,4 @@
-# Paya Scalability Architecture
+# Monte Scalability Architecture
 
 ## Table of Contents
 1. [Horizontal Scaling Strategies](#horizontal-scaling-strategies)
@@ -19,7 +19,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: backend-hpa
-  namespace: paya
+  namespace: monte
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -66,7 +66,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: backend-hpa-custom
-  namespace: paya
+  namespace: monte
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -179,10 +179,10 @@ upstream backend {
 
 server {
     listen 443 ssl http2;
-    server_name api.paya.io;
+    server_name api.monte.io;
 
-    ssl_certificate /etc/ssl/certs/paya.crt;
-    ssl_certificate_key /etc/ssl/private/paya.key;
+    ssl_certificate /etc/ssl/certs/monte.crt;
+    ssl_certificate_key /etc/ssl/private/monte.key;
 
     location / {
         proxy_pass http://backend;
@@ -621,7 +621,7 @@ function handler(event) {
   if (uri.startsWith('/api/')) {
     request.origin = {
       custom: {
-        domainName: 'api.paya.io',
+        domainName: 'api.monte.io',
         port: 443,
         protocol: 'https',
         path: '',
@@ -895,6 +895,6 @@ export class ProfilingMiddleware implements NestMiddleware {
 ## Support
 
 For scalability questions, contact:
-- **Performance Team**: performance@paya.io
-- **Infrastructure Team**: infra@paya.io
-- **Slack**: #paya-scalability
+- **Performance Team**: performance@monte.io
+- **Infrastructure Team**: infra@monte.io
+- **Slack**: #monte-scalability

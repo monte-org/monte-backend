@@ -1,4 +1,4 @@
-# Paya Security Architecture
+# Monte Security Architecture
 
 ## Table of Contents
 1. [Authentication and Authorization](#authentication-and-authorization)
@@ -51,7 +51,7 @@ sequenceDiagram
   role: "MERCHANT",
   iat: 1234567890,
   exp: 1234571490,
-  iss: "paya.io"
+  iss: "monte.io"
 }
 ```
 
@@ -62,7 +62,7 @@ sequenceDiagram
   tokenId: "token_id",
   iat: 1234567890,
   exp: 1234654290,
-  iss: "paya.io"
+  iss: "monte.io"
 }
 ```
 
@@ -365,9 +365,9 @@ export class SignatureService {
 #### Signature Headers
 
 ```
-X-Paya-Api-Key: your_api_key
-X-Paya-Timestamp: 1234567890
-X-Paya-Signature: abc123...
+X-Monte-Api-Key: your_api_key
+X-Monte-Timestamp: 1234567890
+X-Monte-Signature: abc123...
 ```
 
 ### API Key Management
@@ -735,10 +735,10 @@ export class KeyAccessService {
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name api.paya.io;
+    server_name api.monte.io;
 
-    ssl_certificate /etc/ssl/certs/paya.crt;
-    ssl_certificate_key /etc/ssl/private/paya.key;
+    ssl_certificate /etc/ssl/certs/monte.crt;
+    ssl_certificate_key /etc/ssl/private/monte.key;
 
     ssl_protocols TLSv1.3;
     ssl_ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
@@ -995,6 +995,6 @@ export class AuditLogService {
 ## Support
 
 For security questions, contact:
-- **Security Team**: security@paya.io
-- **CTO**: cto@paya.io
-- **Slack**: #paya-security
+- **Security Team**: security@monte.io
+- **CTO**: cto@monte.io
+- **Slack**: #monte-security

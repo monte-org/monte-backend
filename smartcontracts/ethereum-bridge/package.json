@@ -1,7 +1,7 @@
 {
-  "name": "paya-ethereum-bridge",
+  "name": "monte-ethereum-bridge",
   "version": "1.0.0",
-  "description": "Ethereum and Polygon bridge contracts for Paya cross-chain atomic swaps",
+  "description": "Ethereum and Polygon bridge contracts for Monte cross-chain atomic swaps",
   "main": "index.js",
   "scripts": {
     "compile": "hardhat compile",

@@ -18,9 +18,9 @@ export function Header() {
             <Link
               href="/"
               className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-              aria-label="Paya"
+              aria-label="Monte"
             >
-              Paya
+              Monte
             </Link>
             <span className="hidden text-xs text-zinc-500 dark:text-zinc-400 sm:inline">
               Stripe for crypto payments
@@ -41,7 +41,7 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <Link
-              href="https://github.com/StellarPaya/paya"
+              href="https://github.com/StellarPaya/monte"
               target="_blank"
               rel="noreferrer"
               className="rounded-full px-3 py-2 text-sm font-semibold text-zinc-700 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:text-zinc-300 dark:hover:text-white"

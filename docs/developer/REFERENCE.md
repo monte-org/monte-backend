@@ -1,4 +1,4 @@
-# Paya Reference Documentation
+# Monte Reference Documentation
 
 ## Table of Contents
 1. [API Reference](#api-reference)
@@ -11,8 +11,8 @@
 
 ### Base URL
 
-**Production:** `https://api.paya.io/api/v1`  
-**Test:** `https://test-api.paya.io/api/v1`
+**Production:** `https://api.monte.io/api/v1`  
+**Test:** `https://test-api.monte.io/api/v1`
 
 ### Authentication
 
@@ -51,7 +51,7 @@ Authorization: Bearer your_api_key
 ```json
 {
   "paymentId": "pay_abc123",
-  "paymentUrl": "https://checkout.paya.io/pay_abc123",
+  "paymentUrl": "https://checkout.monte.io/pay_abc123",
   "status": "PENDING",
   "amount": 100.00,
   "currency": "XLM",
@@ -228,7 +228,7 @@ Authorization: Bearer your_api_key
 **Request Body:**
 ```json
 {
-  "url": "https://your-website.com/webhooks/paya",
+  "url": "https://your-website.com/webhooks/monte",
   "events": ["payment.created", "payment.confirmed"],
   "secret": "your_webhook_secret"
 }
@@ -238,7 +238,7 @@ Authorization: Bearer your_api_key
 ```json
 {
   "webhookId": "wh_abc123",
-  "url": "https://your-website.com/webhooks/paya",
+  "url": "https://your-website.com/webhooks/monte",
   "events": ["payment.created", "payment.confirmed"],
   "status": "ACTIVE",
   "secret": "your_webhook_secret",
@@ -273,15 +273,15 @@ Authorization: Bearer your_api_key
 
 ### JavaScript SDK
 
-#### PayaClient
+#### MonteClient
 
 **Constructor:**
 ```javascript
-new PayaClient(config)
+new MonteClient(config)
 ```
 
 **Config Parameters:**
-- `apiKey` (string, required): Your Paya API key
+- `apiKey` (string, required): Your Monte API key
 - `environment` (string, optional): `'test'` or `'production'` (default: `'production'`)
 - `timeout` (number, optional): Request timeout in milliseconds (default: `30000`)
 - `baseUrl` (string, optional): Custom base URL
@@ -356,15 +356,15 @@ Creates a webhook handler.
 
 ### Python SDK
 
-#### PayaClient
+#### MonteClient
 
 **Constructor:**
 ```python
-PayaClient(api_key, environment='production', timeout=30, base_url=None)
+MonteClient(api_key, environment='production', timeout=30, base_url=None)
 ```
 
 **Parameters:**
-- `api_key` (str, required): Your Paya API key
+- `api_key` (str, required): Your Monte API key
 - `environment` (str, optional): `'test'` or `'production'` (default: `'production'`)
 - `timeout` (int, optional): Request timeout in seconds (default: `30`)
 - `base_url` (str, optional): Custom base URL
@@ -442,11 +442,11 @@ type Config struct {
 }
 ```
 
-#### PayaClient
+#### MonteClient
 
 **Constructor:**
 ```go
-func NewClient(config *Config) *PayaClient
+func NewClient(config *Config) *MonteClient
 ```
 
 **Methods:**
@@ -527,7 +527,7 @@ const config = {
   apiKey: 'your_api_key',
   environment: 'production',
   timeout: 30000,
-  baseUrl: 'https://api.paya.io/api/v1',
+  baseUrl: 'https://api.monte.io/api/v1',
 };
 ```
 
@@ -538,18 +538,18 @@ config = {
     'api_key': 'your_api_key',
     'environment': 'production',
     'timeout': 30,
-    'base_url': 'https://api.paya.io/api/v1',
+    'base_url': 'https://api.monte.io/api/v1',
 }
 ```
 
 #### Go SDK
 
 ```go
-config := &paya.Config{
+config := &monte.Config{
     APIKey:      "your_api_key",
-    Environment: paya.EnvironmentProduction,
+    Environment: monte.EnvironmentProduction,
     Timeout:     30,
-    BaseURL:     "https://api.paya.io/api/v1",
+    BaseURL:     "https://api.monte.io/api/v1",
 }
 ```
 
@@ -810,16 +810,16 @@ Supported subscription billing intervals:
 
 ## API Versioning
 
-Paya uses URL-based versioning:
+Monte uses URL-based versioning:
 
 - Current version: `v1`
-- URL format: `https://api.paya.io/api/v1/...`
+- URL format: `https://api.monte.io/api/v1/...`
 
 Deprecated versions will be supported for at least 6 months after deprecation notice.
 
 ## Support
 
 For API reference questions, contact:
-- **API Documentation**: https://api.paya.io/docs
-- **Email**: api@paya.io
-- **Slack**: #paya-api
+- **API Documentation**: https://api.monte.io/docs
+- **Email**: api@monte.io
+- **Slack**: #monte-api

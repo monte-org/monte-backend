@@ -1,6 +1,6 @@
 # Event Sourcing Recovery Procedures
 
-This document outlines the procedures for recovering from various failure scenarios in the event-sourced Paya backend system.
+This document outlines the procedures for recovering from various failure scenarios in the event-sourced Monte backend system.
 
 ## Table of Contents
 
@@ -117,7 +117,7 @@ for (const info of streamInfos) {
 
 ```bash
 # Restore from most recent backup
-pg_restore -d paya event_store_backup.dump
+pg_restore -d monte event_store_backup.dump
 ```
 
 4. **Replay Events Since Backup**
@@ -447,5 +447,5 @@ async function validateProjectionConsistency(projectionName: string): Promise<bo
 - [Architecture Documentation](./ARCHITECTURE.md)
 - [Event Catalog](./EVENT_CATALOG.md)
 - [Runbooks](../runbooks/)
-- [Monitoring Dashboard](https://monitoring.paya.io)
-- [Alerting System](https://alerts.paya.io)
+- [Monitoring Dashboard](https://monitoring.monte.io)
+- [Alerting System](https://alerts.monte.io)

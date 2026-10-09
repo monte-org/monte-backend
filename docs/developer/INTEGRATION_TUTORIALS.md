@@ -1,8 +1,8 @@
-# Paya Integration Tutorials
+# Monte Integration Tutorials
 
 ## Table of Contents
 1. [Quick Start: Create First Payment in 5 Minutes](#quick-start-create-first-payment-in-5-minutes)
-2. [Checkout Integration: Embed Paya Checkout](#checkout-integration-embed-paya-checkout)
+2. [Checkout Integration: Embed Monte Checkout](#checkout-integration-embed-monte-checkout)
 3. [API Integration: Use REST API](#api-integration-use-rest-api)
 4. [Webhook Integration: Handle Payment Events](#webhook-integration-handle-payment-events)
 5. [SDK Integration: JavaScript SDK](#sdk-integration-javascript-sdk)
@@ -12,16 +12,16 @@
 
 ## Quick Start: Create First Payment in 5 Minutes
 
-This tutorial will guide you through creating your first payment using Paya in just 5 minutes.
+This tutorial will guide you through creating your first payment using Monte in just 5 minutes.
 
 ### Prerequisites
 
-- Paya API key (get from [dashboard.paya.io](https://dashboard.paya.io))
+- Monte API key (get from [dashboard.monte.io](https://dashboard.monte.io))
 - Node.js installed (for this example)
 
 ### Step 1: Get Your API Key
 
-1. Sign up at [dashboard.paya.io](https://dashboard.paya.io)
+1. Sign up at [dashboard.monte.io](https://dashboard.monte.io)
 2. Navigate to API Keys section
 3. Create a new API key
 4. Copy your API key
@@ -33,7 +33,7 @@ This tutorial will guide you through creating your first payment using Paya in j
 const axios = require('axios');
 
 const API_KEY = 'your_api_key_here';
-const API_URL = 'https://api.paya.io/api/v1';
+const API_URL = 'https://api.monte.io/api/v1';
 
 async function createPayment() {
   try {
@@ -112,20 +112,20 @@ checkPaymentStatus('payment_id_from_step_2');
 
 ### What's Next?
 
-- [Embed Paya Checkout](#checkout-integration-embed-paya-checkout)
+- [Embed Monte Checkout](#checkout-integration-embed-monte-checkout)
 - [Handle Webhooks](#webhook-integration-handle-payment-events)
 - [Use SDKs](#sdk-integration-javascript-sdk)
 
-## Checkout Integration: Embed Paya Checkout
+## Checkout Integration: Embed Monte Checkout
 
-This tutorial shows how to embed Paya's hosted checkout into your website.
+This tutorial shows how to embed Monte's hosted checkout into your website.
 
 ### Step 1: Create a Payment
 
 ```javascript
 // Create payment with redirect URL
 const response = await axios.post(
-  'https://api.paya.io/api/v1/payments',
+  'https://api.monte.io/api/v1/payments',
   {
     amount: 50.00,
     currency: 'USD',
@@ -151,11 +151,11 @@ const { paymentUrl, paymentId } = response.data;
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pay with Paya</title>
+  <title>Pay with Monte</title>
 </head>
 <body>
   <button onclick="redirectToCheckout()">
-    Pay with Paya
+    Pay with Monte
   </button>
 
   <script>
@@ -179,7 +179,7 @@ const paymentId = urlParams.get('payment_id');
 async function handlePaymentSuccess() {
   try {
     const response = await axios.get(
-      `https://api.paya.io/api/v1/payments/${paymentId}`,
+      `https://api.monte.io/api/v1/payments/${paymentId}`,
       {
         headers: {
           'Authorization': `Bearer ${API_KEY}`,
@@ -223,7 +223,7 @@ You can customize the checkout appearance:
 
 ```javascript
 const response = await axios.post(
-  'https://api.paya.io/api/v1/payments',
+  'https://api.monte.io/api/v1/payments',
   {
     amount: 50.00,
     currency: 'USD',
@@ -247,7 +247,7 @@ const response = await axios.post(
 
 ## API Integration: Use REST API
 
-This tutorial shows how to use Paya's REST API for custom checkout implementations.
+This tutorial shows how to use Monte's REST API for custom checkout implementations.
 
 ### Authentication
 
@@ -265,7 +265,7 @@ const headers = {
 ```javascript
 async function createPayment() {
   const response = await axios.post(
-    'https://api.paya.io/api/v1/payments',
+    'https://api.monte.io/api/v1/payments',
     {
       amount: 100.00,
       currency: 'XLM',
@@ -290,7 +290,7 @@ async function createPayment() {
 ```javascript
 async function getPayment(paymentId) {
   const response = await axios.get(
-    `https://api.paya.io/api/v1/payments/${paymentId}`,
+    `https://api.monte.io/api/v1/payments/${paymentId}`,
     { headers }
   );
 
@@ -304,7 +304,7 @@ async function getPayment(paymentId) {
 async function listPayments(filters = {}) {
   const params = new URLSearchParams(filters);
   const response = await axios.get(
-    `https://api.paya.io/api/v1/payments?${params}`,
+    `https://api.monte.io/api/v1/payments?${params}`,
     { headers }
   );
 
@@ -324,7 +324,7 @@ const payments = await listPayments({
 ```javascript
 async function refundPayment(paymentId, amount = null) {
   const response = await axios.post(
-    `https://api.paya.io/api/v1/payments/${paymentId}/refund`,
+    `https://api.monte.io/api/v1/payments/${paymentId}/refund`,
     {
       amount: amount, // null for full refund
       reason: 'Customer request',
@@ -341,7 +341,7 @@ async function refundPayment(paymentId, amount = null) {
 ```javascript
 async function createSubscription() {
   const response = await axios.post(
-    'https://api.paya.io/api/v1/subscriptions',
+    'https://api.monte.io/api/v1/subscriptions',
     {
       planId: 'plan_123',
       customerId: 'customer_456',
@@ -358,10 +358,10 @@ async function createSubscription() {
 ### Complete Example: Custom Checkout Flow
 
 ```javascript
-class PayaClient {
+class MonteClient {
   constructor(apiKey) {
     this.apiKey = apiKey;
-    this.baseUrl = 'https://api.paya.io/api/v1';
+    this.baseUrl = 'https://api.monte.io/api/v1';
     this.headers = {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -405,10 +405,10 @@ class PayaClient {
 }
 
 // Usage
-const paya = new PayaClient('your_api_key');
+const monte = new MonteClient('your_api_key');
 
 // Create payment
-const payment = await paya.createPayment({
+const payment = await monte.createPayment({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -416,24 +416,24 @@ const payment = await paya.createPayment({
 });
 
 // Check payment status
-const status = await paya.getPayment(payment.paymentId);
+const status = await monte.getPayment(payment.paymentId);
 
 // List payments
-const payments = await paya.listPayments({ status: 'COMPLETED' });
+const payments = await monte.listPayments({ status: 'COMPLETED' });
 ```
 
 ## Webhook Integration: Handle Payment Events
 
-This tutorial shows how to handle Paya webhooks to receive real-time payment events.
+This tutorial shows how to handle Monte webhooks to receive real-time payment events.
 
 ### Step 1: Register Webhook
 
 ```javascript
 async function registerWebhook() {
   const response = await axios.post(
-    'https://api.paya.io/api/v1/notifications/webhooks/register',
+    'https://api.monte.io/api/v1/notifications/webhooks/register',
     {
-      url: 'https://your-website.com/webhooks/paya',
+      url: 'https://your-website.com/webhooks/monte',
       events: [
         'payment.created',
         'payment.confirmed',
@@ -463,8 +463,8 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/webhooks/paya', (req, res) => {
-  const signature = req.headers['x-paya-signature'];
+app.post('/webhooks/monte', (req, res) => {
+  const signature = req.headers['x-monte-signature'];
   const payload = JSON.stringify(req.body);
 
   // Verify signature
@@ -539,7 +539,7 @@ ngrok http 3000
 
 ### Webhook Retry Logic
 
-Paya automatically retries failed webhook deliveries with exponential backoff:
+Monte automatically retries failed webhook deliveries with exponential backoff:
 - 1st retry: 1 minute
 - 2nd retry: 5 minutes
 - 3rd retry: 15 minutes
@@ -551,15 +551,15 @@ Paya automatically retries failed webhook deliveries with exponential backoff:
 ### Installation
 
 ```bash
-npm install @paya/sdk
+npm install @monte/sdk
 ```
 
 ### Setup
 
 ```javascript
-import { PayaClient } from '@paya/sdk';
+import { MonteClient } from '@monte/sdk';
 
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_api_key',
   environment: 'production', // or 'test'
 });
@@ -568,7 +568,7 @@ const paya = new PayaClient({
 ### Create Payment
 
 ```javascript
-const payment = await paya.payments.create({
+const payment = await monte.payments.create({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -582,7 +582,7 @@ console.log('Payment URL:', payment.paymentUrl);
 ### Get Payment
 
 ```javascript
-const payment = await paya.payments.get('payment_id');
+const payment = await monte.payments.get('payment_id');
 
 console.log('Status:', payment.status);
 console.log('Amount:', payment.amount);
@@ -591,7 +591,7 @@ console.log('Amount:', payment.amount);
 ### List Payments
 
 ```javascript
-const payments = await paya.payments.list({
+const payments = await monte.payments.list({
   status: 'COMPLETED',
   limit: 10,
 });
@@ -604,7 +604,7 @@ payments.forEach(payment => {
 ### Create Subscription
 
 ```javascript
-const subscription = await paya.subscriptions.create({
+const subscription = await monte.subscriptions.create({
   planId: 'plan_123',
   customerId: 'customer_456',
   customerEmail: 'customer@example.com',
@@ -616,7 +616,7 @@ console.log('Subscription ID:', subscription.id);
 ### Handle Webhooks
 
 ```javascript
-const webhookHandler = paya.webhooks.createHandler({
+const webhookHandler = monte.webhooks.createHandler({
   secret: 'your_webhook_secret',
 });
 
@@ -631,15 +631,15 @@ webhookHandler.on('payment.failed', (data) => {
 });
 
 // Express.js integration
-app.post('/webhooks/paya', webhookHandler.middleware());
+app.post('/webhooks/monte', webhookHandler.middleware());
 ```
 
 ### Complete Example
 
 ```javascript
-import { PayaClient } from '@paya/sdk';
+import { MonteClient } from '@monte/sdk';
 
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_api_key',
   environment: 'test',
 });
@@ -647,7 +647,7 @@ const paya = new PayaClient({
 async function processPayment() {
   try {
     // Create payment
-    const payment = await paya.payments.create({
+    const payment = await monte.payments.create({
       amount: 50.00,
       currency: 'USD',
       merchantId: 'your_merchant_id',
@@ -657,7 +657,7 @@ async function processPayment() {
     console.log('Payment created:', payment.id);
 
     // Wait for confirmation
-    const confirmedPayment = await paya.payments.waitForConfirmation(
+    const confirmedPayment = await monte.payments.waitForConfirmation(
       payment.id,
       { timeout: 300000 } // 5 minutes
     );
@@ -679,15 +679,15 @@ processPayment();
 ### Installation
 
 ```bash
-pip install paya-sdk
+pip install monte-sdk
 ```
 
 ### Setup
 
 ```python
-from paya import PayaClient
+from monte import MonteClient
 
-paya = PayaClient(
+monte = MonteClient(
     api_key='your_api_key',
     environment='production'  # or 'test'
 )
@@ -696,7 +696,7 @@ paya = PayaClient(
 ### Create Payment
 
 ```python
-payment = paya.payments.create(
+payment = monte.payments.create(
     amount=100.00,
     currency='XLM',
     merchant_id='your_merchant_id',
@@ -710,7 +710,7 @@ print(f"Payment URL: {payment.payment_url}")
 ### Get Payment
 
 ```python
-payment = paya.payments.get('payment_id')
+payment = monte.payments.get('payment_id')
 
 print(f"Status: {payment.status}")
 print(f"Amount: {payment.amount}")
@@ -719,7 +719,7 @@ print(f"Amount: {payment.amount}")
 ### List Payments
 
 ```python
-payments = paya.payments.list(
+payments = monte.payments.list(
     status='COMPLETED',
     limit=10
 )
@@ -731,7 +731,7 @@ for payment in payments:
 ### Create Subscription
 
 ```python
-subscription = paya.subscriptions.create(
+subscription = monte.subscriptions.create(
     plan_id='plan_123',
     customer_id='customer_456',
     customer_email='customer@example.com'
@@ -744,12 +744,12 @@ print(f"Subscription ID: {subscription.id}")
 
 ```python
 from flask import Flask, request
-from paya.webhooks import WebhookHandler
+from monte.webhooks import WebhookHandler
 
 app = Flask(__name__)
 webhook_handler = WebhookHandler(secret='your_webhook_secret')
 
-@app.route('/webhooks/paya', methods=['POST'])
+@app.route('/webhooks/monte', methods=['POST'])
 def handle_webhook():
     event = webhook_handler.verify(request)
     
@@ -769,10 +769,10 @@ if __name__ == '__main__':
 ### Complete Example
 
 ```python
-from paya import PayaClient
+from monte import MonteClient
 import asyncio
 
-paya = PayaClient(
+monte = MonteClient(
     api_key='your_api_key',
     environment='test'
 )
@@ -780,7 +780,7 @@ paya = PayaClient(
 async def process_payment():
     try:
         # Create payment
-        payment = paya.payments.create(
+        payment = monte.payments.create(
             amount=50.00,
             currency='USD',
             merchant_id='your_merchant_id',
@@ -790,7 +790,7 @@ async def process_payment():
         print(f"Payment created: {payment.id}")
         
         # Wait for confirmation
-        confirmed_payment = paya.payments.wait_for_confirmation(
+        confirmed_payment = monte.payments.wait_for_confirmation(
             payment.id,
             timeout=300  # 5 minutes
         )
@@ -811,7 +811,7 @@ process_payment()
 ### Installation
 
 ```bash
-go get github.com/0xNinx/paya-go-sdk
+go get github.com/0xNinx/monte-go-sdk
 ```
 
 ### Setup
@@ -821,13 +821,13 @@ package main
 
 import (
     "fmt"
-    "github.com/0xNinx/paya-go-sdk"
+    "github.com/0xNinx/monte-go-sdk"
 )
 
 func main() {
-    client := paya.NewClient(&paya.Config{
+    client := monte.NewClient(&monte.Config{
         APIKey:      "your_api_key",
-        Environment: paya.EnvironmentProduction, // or paya.EnvironmentTest
+        Environment: monte.EnvironmentProduction, // or monte.EnvironmentTest
     })
 }
 ```
@@ -835,7 +835,7 @@ func main() {
 ### Create Payment
 
 ```go
-payment, err := client.Payments.Create(&paya.CreatePaymentRequest{
+payment, err := client.Payments.Create(&monte.CreatePaymentRequest{
     Amount:        100.00,
     Currency:      "XLM",
     MerchantID:    "your_merchant_id",
@@ -866,8 +866,8 @@ fmt.Printf("Amount: %f\n", payment.Amount)
 ### List Payments
 
 ```go
-payments, err := client.Payments.List(&paya.ListPaymentsRequest{
-    Status: paya.PaymentStatusCompleted,
+payments, err := client.Payments.List(&monte.ListPaymentsRequest{
+    Status: monte.PaymentStatusCompleted,
     Limit:  10,
 })
 
@@ -883,7 +883,7 @@ for _, payment := range payments {
 ### Create Subscription
 
 ```go
-subscription, err := client.Subscriptions.Create(&paya.CreateSubscriptionRequest{
+subscription, err := client.Subscriptions.Create(&monte.CreateSubscriptionRequest{
     PlanID:        "plan_123",
     CustomerID:    "customer_456",
     CustomerEmail: "customer@example.com",
@@ -903,7 +903,7 @@ package main
 
 import (
     "net/http"
-    "github.com/0xNinx/paya-go-sdk/webhooks"
+    "github.com/0xNinx/monte-go-sdk/webhooks"
 )
 
 func webhookHandler(w http.ResponseWriter, r *http.Request) {
@@ -928,7 +928,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    http.HandleFunc("/webhooks/paya", webhookHandler)
+    http.HandleFunc("/webhooks/monte", webhookHandler)
     http.ListenAndServe(":3000", nil)
 }
 ```
@@ -941,17 +941,17 @@ package main
 import (
     "fmt"
     "time"
-    "github.com/0xNinx/paya-go-sdk"
+    "github.com/0xNinx/monte-go-sdk"
 )
 
 func main() {
-    client := paya.NewClient(&paya.Config{
+    client := monte.NewClient(&monte.Config{
         APIKey:      "your_api_key",
-        Environment: paya.EnvironmentTest,
+        Environment: monte.EnvironmentTest,
     })
     
     // Create payment
-    payment, err := client.Payments.Create(&paya.CreatePaymentRequest{
+    payment, err := client.Payments.Create(&monte.CreatePaymentRequest{
         Amount:        50.00,
         Currency:      "USD",
         MerchantID:    "your_merchant_id",
@@ -967,7 +967,7 @@ func main() {
     // Wait for confirmation
     confirmedPayment, err := client.Payments.WaitForConfirmation(
         payment.ID,
-        &paya.WaitForConfirmationOptions{
+        &monte.WaitForConfirmationOptions{
             Timeout: 5 * time.Minute,
         },
     )
@@ -989,7 +989,7 @@ This tutorial shows how to set up recurring billing with subscriptions.
 ```javascript
 async function createPlan() {
   const response = await axios.post(
-    'https://api.paya.io/api/v1/subscriptions/plans',
+    'https://api.monte.io/api/v1/subscriptions/plans',
     {
       name: 'Pro Plan',
       amount: 29.99,
@@ -1017,7 +1017,7 @@ console.log('Plan ID:', plan.planId);
 ```javascript
 async function createSubscription(planId, customerId, customerEmail) {
   const response = await axios.post(
-    'https://api.paya.io/api/v1/subscriptions',
+    'https://api.monte.io/api/v1/subscriptions',
     {
       planId,
       customerId,
@@ -1070,7 +1070,7 @@ webhookHandler.on('subscription.cancelled', (data) => {
 ```javascript
 async function cancelSubscription(subscriptionId) {
   const response = await axios.post(
-    `https://api.paya.io/api/v1/subscriptions/${subscriptionId}/cancel`,
+    `https://api.monte.io/api/v1/subscriptions/${subscriptionId}/cancel`,
     {
       cancelAtPeriodEnd: true, // Cancel at end of current period
     },
@@ -1092,7 +1092,7 @@ await cancelSubscription(subscription.subscriptionId);
 ```javascript
 async function updateSubscriptionPlan(subscriptionId, newPlanId) {
   const response = await axios.put(
-    `https://api.paya.io/api/v1/subscriptions/${subscriptionId}`,
+    `https://api.monte.io/api/v1/subscriptions/${subscriptionId}`,
     {
       planId: newPlanId,
     },
@@ -1115,7 +1115,7 @@ await updateSubscriptionPlan(subscription.subscriptionId, 'new_plan_id');
 class SubscriptionManager {
   constructor(apiKey) {
     this.apiKey = apiKey;
-    this.baseUrl = 'https://api.paya.io/api/v1';
+    this.baseUrl = 'https://api.monte.io/api/v1';
     this.headers = {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -1188,10 +1188,10 @@ await manager.cancelSubscription(subscription.subscriptionId);
 
 ### Test Mode
 
-Paya provides a test mode for development:
+Monte provides a test mode for development:
 
 ```javascript
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_test_api_key',
   environment: 'test',
 });
@@ -1222,4 +1222,4 @@ Use test wallets for Stellar testnet:
 
 - [SDK Documentation](#sdk-documentation)
 - [Troubleshooting Guide](#troubleshooting-guide)
-- [API Reference](https://api.paya.io/docs)
+- [API Reference](https://api.monte.io/docs)

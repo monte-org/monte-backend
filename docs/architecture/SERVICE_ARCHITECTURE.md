@@ -1,4 +1,4 @@
-# Paya Service Architecture
+# Monte Service Architecture
 
 ## Table of Contents
 1. [Service Overview](#service-overview)
@@ -827,7 +827,7 @@ spec:
     spec:
       containers:
       - name: payment-service
-        image: paya/payment-service:latest
+        image: monte/payment-service:latest
         ports:
         - containerPort: 3000
         env:
@@ -860,12 +860,12 @@ Each service exposes metrics:
 ```typescript
 // Prometheus metrics
 const paymentCounter = new Counter({
-  name: 'paya_payments_total',
+  name: 'monte_payments_total',
   help: 'Total payments processed',
 });
 
 const paymentDuration = new Histogram({
-  name: 'paya_payment_duration_seconds',
+  name: 'monte_payment_duration_seconds',
   help: 'Payment processing duration',
 });
 ```
@@ -907,6 +907,6 @@ try {
 ## Support
 
 For service architecture questions, contact:
-- **Tech Lead**: tech-lead@paya.io
-- **Service Team**: services@paya.io
-- **Slack**: #paya-services
+- **Tech Lead**: tech-lead@monte.io
+- **Service Team**: services@monte.io
+- **Slack**: #monte-services

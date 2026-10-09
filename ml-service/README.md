@@ -1,6 +1,6 @@
-# Paya Fraud Detection ML Service
+# Monte Fraud Detection ML Service
 
-This is a Python-based machine learning service for fraud detection in the Paya payment platform.
+This is a Python-based machine learning service for fraud detection in the Monte payment platform.
 
 ## Features
 

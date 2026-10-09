@@ -1,4 +1,4 @@
-# Paya System Architecture
+# Monte System Architecture
 
 ## Table of Contents
 1. [High-Level Architecture](#high-level-architecture)
@@ -12,7 +12,7 @@
 
 ### System Overview
 
-Paya is a crypto payment infrastructure built on the Stellar network, designed to handle payments, subscriptions, escrow, and payment splits with high availability and security.
+Monte is a crypto payment infrastructure built on the Stellar network, designed to handle payments, subscriptions, escrow, and payment splits with high availability and security.
 
 ### Architecture Diagram
 
@@ -721,6 +721,6 @@ graph LR
 ## Support
 
 For architecture questions, contact:
-- **Tech Lead**: tech-lead@paya.io
-- **Architecture Team**: architecture@paya.io
-- **Slack**: #paya-architecture
+- **Tech Lead**: tech-lead@monte.io
+- **Architecture Team**: architecture@monte.io
+- **Slack**: #monte-architecture

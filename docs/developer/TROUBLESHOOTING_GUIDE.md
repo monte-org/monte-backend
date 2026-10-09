@@ -1,4 +1,4 @@
-# Paya Troubleshooting Guide
+# Monte Troubleshooting Guide
 
 ## Table of Contents
 1. [Common Integration Errors](#common-integration-errors)
@@ -31,14 +31,14 @@
 1. **Verify API Key**
 ```javascript
 // Check your API key
-console.log('API Key:', process.env.PAYA_API_KEY);
+console.log('API Key:', process.env.MONTE_API_KEY);
 
 // Ensure no extra spaces or characters
-const apiKey = process.env.PAYA_API_KEY.trim();
+const apiKey = process.env.MONTE_API_KEY.trim();
 ```
 
 2. **Regenerate API Key**
-- Go to [dashboard.paya.io](https://dashboard.paya.io)
+- Go to [dashboard.monte.io](https://dashboard.monte.io)
 - Navigate to API Keys section
 - Generate a new API key
 - Update your environment variables
@@ -46,8 +46,8 @@ const apiKey = process.env.PAYA_API_KEY.trim();
 3. **Check Environment**
 ```javascript
 // Ensure you're using the right environment
-const paya = new PayaClient({
-  apiKey: process.env.PAYA_API_KEY,
+const monte = new MonteClient({
+  apiKey: process.env.MONTE_API_KEY,
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'test',
 });
 ```
@@ -96,7 +96,7 @@ function validatePaymentData(data) {
 // Usage
 try {
   validatePaymentData(paymentData);
-  await paya.payments.create(paymentData);
+  await monte.payments.create(paymentData);
 } catch (error) {
   console.error('Validation error:', error.message);
 }
@@ -105,7 +105,7 @@ try {
 2. **Use SDK Validation**
 ```javascript
 // SDKs include built-in validation
-const payment = await paya.payments.create({
+const payment = await monte.payments.create({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -137,7 +137,7 @@ const merchantId = 'your_merchant_id';
 
 // Verify merchant exists
 try {
-  const merchant = await paya.merchants.get(merchantId);
+  const merchant = await monte.merchants.get(merchantId);
   console.log('Merchant found:', merchant.name);
 } catch (error) {
   console.error('Merchant not found:', error.message);
@@ -145,7 +145,7 @@ try {
 ```
 
 2. **Contact Support**
-If merchant ID is correct but still not found, contact support at support@paya.io
+If merchant ID is correct but still not found, contact support at support@monte.io
 
 ### Error: Rate Limit Exceeded
 
@@ -192,7 +192,7 @@ const limiter = new RateLimiter(100, 60000); // 100 requests per minute
 
 try {
   await limiter.check();
-  await paya.payments.create(paymentData);
+  await monte.payments.create(paymentData);
 } catch (error) {
   console.error('Rate limit error:', error.message);
 }
@@ -203,7 +203,7 @@ try {
 async function createPaymentWithRetry(paymentData, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
     try {
-      return await paya.payments.create(paymentData);
+      return await monte.payments.create(paymentData);
     } catch (error) {
       if (error.status === 429) {
         const waitTime = Math.pow(2, i) * 1000; // 1s, 2s, 4s
@@ -236,7 +236,7 @@ async function createPaymentWithRetry(paymentData, maxRetries = 3) {
 1. **Check Payment Status**
 ```javascript
 async function checkPaymentStatus(paymentId) {
-  const payment = await paya.payments.get(paymentId);
+  const payment = await monte.payments.get(paymentId);
   console.log('Payment status:', payment.status);
   console.log('Transaction hash:', payment.transactionHash);
   
@@ -270,7 +270,7 @@ async function waitForPaymentConfirmation(paymentId, timeout = 300000) {
   const startTime = Date.now();
   
   while (Date.now() - startTime < timeout) {
-    const payment = await paya.payments.get(paymentId);
+    const payment = await monte.payments.get(paymentId);
     
     if (payment.status === 'COMPLETED') {
       return payment;
@@ -301,7 +301,7 @@ async function waitForPaymentConfirmation(paymentId, timeout = 300000) {
 
 1. **Check Failure Reason**
 ```javascript
-const payment = await paya.payments.get(paymentId);
+const payment = await monte.payments.get(paymentId);
 console.log('Failure reason:', payment.errorMessage);
 console.log('Error code:', payment.errorCode);
 ```
@@ -331,11 +331,11 @@ function handlePaymentFailure(payment) {
 3. **Retry Failed Payment**
 ```javascript
 async function retryPayment(paymentId) {
-  const payment = await paya.payments.get(paymentId);
+  const payment = await monte.payments.get(paymentId);
   
   if (payment.status === 'FAILED') {
     // Create new payment with same details
-    const newPayment = await paya.payments.create({
+    const newPayment = await monte.payments.create({
       amount: payment.amount,
       currency: payment.currency,
       merchantId: payment.merchantId,
@@ -365,7 +365,7 @@ import { v4 as uuidv4 } from 'uuid';
 async function createPaymentWithIdempotency(paymentData) {
   const idempotencyKey = uuidv4();
   
-  const payment = await paya.payments.create({
+  const payment = await monte.payments.create({
     ...paymentData,
     idempotencyKey,
   });
@@ -377,7 +377,7 @@ async function createPaymentWithIdempotency(paymentData) {
 2. **Check for Existing Payment**
 ```javascript
 async function findExistingPayment(orderId) {
-  const payments = await paya.payments.list({
+  const payments = await monte.payments.list({
     metadata: { orderId },
   });
   
@@ -407,14 +407,14 @@ async function findExistingPayment(orderId) {
 
 1. **Verify Webhook Registration**
 ```javascript
-const webhooks = await paya.webhooks.list();
+const webhooks = await monte.webhooks.list();
 console.log('Registered webhooks:', webhooks);
 ```
 
 2. **Test Webhook Endpoint**
 ```bash
 # Test webhook endpoint locally
-curl -X POST http://localhost:3000/webhooks/paya \
+curl -X POST http://localhost:3000/webhooks/monte \
   -H "Content-Type: application/json" \
   -d '{"eventType":"test","data":{}}'
 ```
@@ -432,7 +432,7 @@ ngrok http 3000
 
 4. **Check Server Logs**
 ```javascript
-app.post('/webhooks/paya', (req, res) => {
+app.post('/webhooks/monte', (req, res) => {
   console.log('Webhook received:', req.body);
   console.log('Headers:', req.headers);
   
@@ -455,7 +455,7 @@ app.post('/webhooks/paya', (req, res) => {
 
 1. **Verify Webhook Secret**
 ```javascript
-const webhook = await paya.webhooks.get('webhook_id');
+const webhook = await monte.webhooks.get('webhook_id');
 console.log('Webhook secret:', webhook.secret);
 ```
 
@@ -479,7 +479,7 @@ function verifySignature(payload, signature, secret) {
 
 3. **Use SDK Verification**
 ```javascript
-const isValid = paya.webhooks.verifySignature(
+const isValid = monte.webhooks.verifySignature(
   payload,
   signature,
   'your_webhook_secret'
@@ -505,13 +505,13 @@ if (!isValid) {
 
 1. **Check Webhook Delivery Status**
 ```javascript
-const deliveries = await paya.webhooks.getDeliveries('webhook_id');
+const deliveries = await monte.webhooks.getDeliveries('webhook_id');
 console.log('Delivery status:', deliveries);
 ```
 
 2. **Improve Webhook Handler**
 ```javascript
-app.post('/webhooks/paya', async (req, res) => {
+app.post('/webhooks/monte', async (req, res) => {
   try {
     // Process webhook
     await handleWebhookEvent(req.body);
@@ -530,7 +530,7 @@ app.post('/webhooks/paya', async (req, res) => {
 
 3. **Add Timeout Handling**
 ```javascript
-app.post('/webhooks/paya', (req, res) => {
+app.post('/webhooks/monte', (req, res) => {
   res.setTimeout(5000, () => {
     console.log('Webhook timeout');
     res.status(504).send('Timeout');
@@ -553,7 +553,7 @@ app.post('/webhooks/paya', (req, res) => {
 1. **Check API Key Format**
 ```javascript
 // API key should be 32 characters
-const apiKey = process.env.PAYA_API_KEY;
+const apiKey = process.env.MONTE_API_KEY;
 
 if (apiKey.length !== 32) {
   console.error('Invalid API key length');
@@ -563,17 +563,17 @@ if (apiKey.length !== 32) {
 2. **Check Environment Variables**
 ```bash
 # Check if API key is set
-echo $PAYA_API_KEY
+echo $MONTE_API_KEY
 
 # Set API key
-export PAYA_API_KEY=your_api_key_here
+export MONTE_API_KEY=your_api_key_here
 ```
 
 3. **Test API Key**
 ```javascript
 async function testApiKey() {
   try {
-    const merchant = await paya.merchants.get('your_merchant_id');
+    const merchant = await monte.merchants.get('your_merchant_id');
     console.log('API key is valid');
     return true;
   } catch (error) {
@@ -594,7 +594,7 @@ async function testApiKey() {
 1. **Refresh Token**
 ```javascript
 async function refreshToken() {
-  const newToken = await paya.auth.refreshToken();
+  const newToken = await monte.auth.refreshToken();
   console.log('New token:', newToken);
   return newToken;
 }
@@ -637,18 +637,18 @@ class AuthClient {
 1. **Check Network Connectivity**
 ```bash
 # Test API connectivity
-curl -I https://api.paya.io/api/v1/health
+curl -I https://api.monte.io/api/v1/health
 
 # Test DNS resolution
-nslookup api.paya.io
+nslookup api.monte.io
 
 # Test network route
-traceroute api.paya.io
+traceroute api.monte.io
 ```
 
 2. **Increase Timeout**
 ```javascript
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_api_key',
   timeout: 60000, // 60 seconds
 });
@@ -690,7 +690,7 @@ sudo apt-get install ca-certificates
 
 2. **Disable SSL Verification (Not Recommended for Production)**
 ```javascript
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_api_key',
   rejectUnauthorized: false, // Only for testing
 });
@@ -701,7 +701,7 @@ const paya = new PayaClient({
 ### Enable Debug Logging
 
 ```javascript
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_api_key',
   debug: true, // Enable debug logging
 });
@@ -724,13 +724,13 @@ sudo wireshark
 **tcpdump:**
 ```bash
 # Capture HTTP traffic
-sudo tcpdump -i eth0 -A -s 0 'tcp port 443 and host api.paya.io'
+sudo tcpdump -i eth0 -A -s 0 'tcp port 443 and host api.monte.io'
 ```
 
 ### Use API Testing Tools
 
 **Postman:**
-1. Import Paya API collection
+1. Import Monte API collection
 2. Set environment variables
 3. Test endpoints
 4. Inspect responses
@@ -738,7 +738,7 @@ sudo tcpdump -i eth0 -A -s 0 'tcp port 443 and host api.paya.io'
 **cURL:**
 ```bash
 # Test payment creation
-curl -X POST https://api.paya.io/api/v1/payments \
+curl -X POST https://api.monte.io/api/v1/payments \
   -H "Authorization: Bearer your_api_key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -776,7 +776,7 @@ axiosInstance.interceptors.response.use((response) => {
   return response;
 });
 
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_api_key',
   httpClient: axiosInstance,
 });
@@ -787,7 +787,7 @@ const paya = new PayaClient({
 ```javascript
 async function checkServerStatus() {
   try {
-    const response = await axios.get('https://api.paya.io/api/v1/health');
+    const response = await axios.get('https://api.monte.io/api/v1/health');
     console.log('Server status:', response.data);
     return response.data;
   } catch (error) {
@@ -802,7 +802,7 @@ async function checkServerStatus() {
 ```javascript
 async function getApiUsage() {
   try {
-    const usage = await paya.account.getUsage();
+    const usage = await monte.account.getUsage();
     console.log('API usage:', usage);
     console.log('Requests remaining:', usage.requestsRemaining);
     return usage;
@@ -816,15 +816,15 @@ async function getApiUsage() {
 
 ### Self-Service Resources
 
-- **API Documentation**: https://api.paya.io/docs
-- **Status Page**: https://status.paya.io
-- **GitHub Issues**: https://github.com/0xNinx/paya/issues
-- **Community Forum**: https://community.paya.io
+- **API Documentation**: https://api.monte.io/docs
+- **Status Page**: https://status.monte.io
+- **GitHub Issues**: https://github.com/0xNinx/monte/issues
+- **Community Forum**: https://community.monte.io
 
 ### Contact Support
 
-**Email:** support@paya.io  
-**Slack:** #paya-support  
+**Email:** support@monte.io  
+**Slack:** #monte-support  
 **Phone**: +1-555-0123 (24/7 for critical issues)
 
 ### When to Contact Support

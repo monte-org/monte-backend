@@ -1,4 +1,4 @@
-# Paya Platform Maintenance Procedures
+# Monte Platform Maintenance Procedures
 
 ## Table of Contents
 1. [Regular Maintenance](#regular-maintenance)
@@ -21,10 +21,10 @@
 # daily-log-cleanup.sh
 
 # Rotate application logs
-logrotate -f /etc/logrotate.d/paya
+logrotate -f /etc/logrotate.d/monte
 
 # Clean old logs (keep 30 days)
-find /var/log/paya -name "*.log" -mtime +30 -delete
+find /var/log/monte -name "*.log" -mtime +30 -delete
 
 # Clean PostgreSQL logs
 find /var/log/postgresql -name "*.log" -mtime +30 -delete
@@ -36,10 +36,10 @@ df -h | grep -E "(Filesystem|/dev/)"
 **Verification**:
 ```bash
 # Check log directory size
-du -sh /var/log/paya
+du -sh /var/log/monte
 
 # Verify logrotate ran
-logrotate -d /etc/logrotate.d/paya
+logrotate -d /etc/logrotate.d/monte
 ```
 
 #### Database Maintenance
@@ -52,16 +52,16 @@ logrotate -d /etc/logrotate.d/paya
 # daily-db-maintenance.sh
 
 # Vacuum analyze tables
-psql -U postgres -d paya -c "VACUUM ANALYZE;"
+psql -U postgres -d monte -c "VACUUM ANALYZE;"
 
 # Reindex tables
-psql -U postgres -d paya -c "REINDEX DATABASE paya;"
+psql -U postgres -d monte -c "REINDEX DATABASE monte;"
 
 # Update statistics
-psql -U postgres -d paya -c "ANALYZE;"
+psql -U postgres -d monte -c "ANALYZE;"
 
 # Check table bloat
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT schemaname, tablename, 
          pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size,
          n_dead_tup
@@ -107,10 +107,10 @@ sudo apt update
 sudo apt list --upgradable
 
 # Run vulnerability scanner
-trivy fs /home/paya/backend
+trivy fs /home/monte/backend
 
 # Scan dependencies
-cd /home/paya/backend
+cd /home/monte/backend
 npm audit
 
 # Check for exposed ports
@@ -127,7 +127,7 @@ nmap -sV localhost
 # weekly-performance-review.sh
 
 # Check slow queries
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT query, mean_exec_time, calls, total_exec_time
   FROM pg_stat_statements
   ORDER BY mean_exec_time DESC
@@ -135,7 +135,7 @@ psql -U postgres -d paya -c "
 "
 
 # Check index usage
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT schemaname, tablename, indexname, idx_scan
   FROM pg_stat_user_indexes
   ORDER BY idx_scan ASC
@@ -156,15 +156,15 @@ curl -s http://localhost:3000/metrics | grep request_duration
 # weekly-backup-verification.sh
 
 # Restore latest backup to test database
-LATEST_BACKUP=$(ls -t /var/backups/paya/*.sql.gz | head -1)
-gunzip -c $LATEST_BACKUP | psql -U postgres -d paya_test
+LATEST_BACKUP=$(ls -t /var/backups/monte/*.sql.gz | head -1)
+gunzip -c $LATEST_BACKUP | psql -U postgres -d monte_test
 
 # Verify data integrity
-psql -U postgres -d paya_test -c "SELECT COUNT(*) FROM subscriptions;"
-psql -U postgres -d paya_test -c "SELECT COUNT(*) FROM payments;"
+psql -U postgres -d monte_test -c "SELECT COUNT(*) FROM subscriptions;"
+psql -U postgres -d monte_test -c "SELECT COUNT(*) FROM payments;"
 
 # Clean up test database
-psql -U postgres -c "DROP DATABASE paya_test;"
+psql -U postgres -c "DROP DATABASE monte_test;"
 ```
 
 ### Monthly Maintenance Tasks
@@ -186,17 +186,17 @@ sudo apt update
 sudo apt upgrade -y
 
 # Update Node.js packages
-cd /home/paya/backend
+cd /home/monte/backend
 npm update
 
 # Rebuild application
 npm run build
 
 # Restart services
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Verify services
-sudo systemctl status paya-backend
+sudo systemctl status monte-backend
 ```
 
 #### Database Schema Review
@@ -209,7 +209,7 @@ sudo systemctl status paya-backend
 # monthly-schema-review.sh
 
 # Check for unused indexes
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT schemaname, tablename, indexname
   FROM pg_stat_user_indexes
   WHERE idx_scan = 0
@@ -217,7 +217,7 @@ psql -U postgres -d paya -c "
 "
 
 # Check for table bloat
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT schemaname, tablename,
          pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size
   FROM pg_stat_user_tables
@@ -225,7 +225,7 @@ psql -U postgres -d paya -c "
 "
 
 # Check for missing indexes
-psql -U postgres -d paya -c "
+psql -U postgres -d monte -c "
   SELECT schemaname, tablename, attname, n_distinct, correlation
   FROM pg_stats
   WHERE n_distinct > 100
@@ -253,8 +253,8 @@ free -h
 top -bn1 | head -20
 
 # Check database size
-psql -U postgres -d paya -c "
-  SELECT pg_size_pretty(pg_database_size('paya')) AS database_size;
+psql -U postgres -d monte -c "
+  SELECT pg_size_pretty(pg_database_size('monte')) AS database_size;
 "
 
 # Check Redis memory usage
@@ -275,15 +275,15 @@ redis-cli INFO memory
 **Procedure**:
 ```bash
 # Scan backend dependencies
-cd /home/paya/backend
+cd /home/monte/backend
 npm audit
 
 # Scan frontend dependencies
-cd /home/paya/frontend
+cd /home/monte/frontend
 npm audit
 
 # Scan smart contract dependencies
-cd /home/paya/smartcontracts
+cd /home/monte/smartcontracts
 cargo audit
 ```
 
@@ -318,7 +318,7 @@ fi
 **Procedure**:
 ```bash
 # Audit smart contracts
-cd /home/paya/smartcontracts
+cd /home/monte/smartcontracts
 cargo audit
 
 # Run formal verification (if applicable)
@@ -340,7 +340,7 @@ soroban contract inspect --id $CONTRACT_ID --network mainnet
 # ssh-key-rotation.sh
 
 # Generate new SSH key
-ssh-keygen -t ed25519 -C "paya-admin-$(date +%Y%m%d)"
+ssh-keygen -t ed25519 -C "monte-admin-$(date +%Y%m%d)"
 
 # Add to authorized_keys
 # (Manual step: distribute new keys to team)
@@ -365,10 +365,10 @@ NEW_PASSWORD=$(openssl rand -base64 32)
 psql -U postgres -c "ALTER USER postgres WITH PASSWORD '$NEW_PASSWORD';"
 
 # Update application .env file
-sed -i "s/DATABASE_PASSWORD=.*/DATABASE_PASSWORD=$NEW_PASSWORD/" /home/paya/backend/.env
+sed -i "s/DATABASE_PASSWORD=.*/DATABASE_PASSWORD=$NEW_PASSWORD/" /home/monte/backend/.env
 
 # Restart application
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Verify connection
 PGPASSWORD=$NEW_PASSWORD psql -U postgres -c "SELECT 1;"
@@ -388,11 +388,11 @@ NEW_JWT_SECRET=$(openssl rand -base64 32)
 NEW_WEBHOOK_SECRET=$(openssl rand -base64 32)
 
 # Update .env file
-sed -i "s/JWT_SECRET=.*/JWT_SECRET=$NEW_JWT_SECRET/" /home/paya/backend/.env
-sed -i "s/WEBHOOK_SECRET=.*/WEBHOOK_SECRET=$NEW_WEBHOOK_SECRET/" /home/paya/backend/.env
+sed -i "s/JWT_SECRET=.*/JWT_SECRET=$NEW_JWT_SECRET/" /home/monte/backend/.env
+sed -i "s/WEBHOOK_SECRET=.*/WEBHOOK_SECRET=$NEW_WEBHOOK_SECRET/" /home/monte/backend/.env
 
 # Restart application
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 
 # Notify webhook subscribers of new secret
 # (This would send notification to registered webhooks)
@@ -432,13 +432,13 @@ sudo systemctl restart paya-backend
 # growth-analysis.sh
 
 # Get current metrics
-CURRENT_USERS=$(psql -U postgres -d paya -t -c "SELECT COUNT(*) FROM users;")
-CURRENT_PAYMENTS=$(psql -U postgres -d paya -t -c "SELECT COUNT(*) FROM payments;")
-DB_SIZE=$(psql -U postgres -d paya -t -c "SELECT pg_size_pretty(pg_database_size('paya'));")
+CURRENT_USERS=$(psql -U postgres -d monte -t -c "SELECT COUNT(*) FROM users;")
+CURRENT_PAYMENTS=$(psql -U postgres -d monte -t -c "SELECT COUNT(*) FROM payments;")
+DB_SIZE=$(psql -U postgres -d monte -t -c "SELECT pg_size_pretty(pg_database_size('monte'));")
 
 # Calculate growth rates (from monitoring system)
-USER_GROWTH_RATE=$(curl -s http://localhost:9090/api/v1/query?query=rate(paya_users_total[30d]) | jq '.data.result[0].value[1]')
-PAYMENT_GROWTH_RATE=$(curl -s http://localhost:9090/api/v1/query?query=rate(paya_payments_total[30d]) | jq '.data.result[0].value[1]')
+USER_GROWTH_RATE=$(curl -s http://localhost:9090/api/v1/query?query=rate(monte_users_total[30d]) | jq '.data.result[0].value[1]')
+PAYMENT_GROWTH_RATE=$(curl -s http://localhost:9090/api/v1/query?query=rate(monte_payments_total[30d]) | jq '.data.result[0].value[1]')
 
 # Project future capacity needs
 # (This would use growth rates to project 3, 6, 12 month needs)
@@ -486,14 +486,14 @@ lscpu
 **Procedure**:
 ```bash
 # Scale using Kubernetes
-kubectl scale deployment paya-backend --replicas=5
+kubectl scale deployment monte-backend --replicas=5
 
 # Or using Docker Swarm
-docker service scale paya-backend=5
+docker service scale monte-backend=5
 
 # Verify scaling
 kubectl get pods
-docker service ps paya-backend
+docker service ps monte-backend
 ```
 
 #### Database Scaling
@@ -585,7 +585,7 @@ sudo vim /etc/pgbouncer/pgbouncer.ini
 
 ```ini
 [databases]
-paya = host=localhost port=5432 dbname=paya
+monte = host=localhost port=5432 dbname=monte
 
 [pgbouncer]
 listen_addr = 127.0.0.1
@@ -655,7 +655,7 @@ export class CacheService {
 
 **Nginx Configuration**:
 ```nginx
-upstream paya_backend {
+upstream monte_backend {
     least_conn;
     server backend1:3000 weight=3;
     server backend2:3000 weight=2;
@@ -665,10 +665,10 @@ upstream paya_backend {
 
 server {
     listen 80;
-    server_name api.paya.io;
+    server_name api.monte.io;
 
     location / {
-        proxy_pass http://paya_backend;
+        proxy_pass http://monte_backend;
         proxy_http_version 1.1;
         proxy_set_header Connection "";
         proxy_set_header Host $host;
@@ -726,7 +726,7 @@ aws ce get-cost-and-usage \
 
 # GCP Billing
 gcloud billing accounts list
-gcloud billing projects describe paya-production
+gcloud billing projects describe monte-production
 
 # Azure Cost Management
 az consumption list --include-meter-details
@@ -803,7 +803,7 @@ aws ec2 request-spot-fleet \
 ```bash
 # S3 Lifecycle Policy
 aws s3api put-bucket-lifecycle-configuration \
-  --bucket paya-backups \
+  --bucket monte-backups \
   --lifecycle-configuration file://lifecycle.json
 ```
 
@@ -848,6 +848,6 @@ aws s3api put-bucket-lifecycle-configuration \
 ## Support
 
 For maintenance issues, contact:
-- **DevOps Team**: devops@paya.io
+- **DevOps Team**: devops@monte.io
 - **On-Call**: +1-555-0123 (24/7)
-- **Slack**: #paya-ops
+- **Slack**: #monte-ops

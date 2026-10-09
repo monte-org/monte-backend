@@ -183,10 +183,10 @@ export class WebhookDeliveryService {
   private buildHeaders(webhook: Webhook, signature: string): Record<string, string> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'User-Agent': 'Paya-Webhook/1.0',
-      'X-Paya-Signature': signature,
-      'X-Paya-Timestamp': Date.now().toString(),
-      'X-Paya-Webhook-Id': webhook.webhookId,
+      'User-Agent': 'Monte-Webhook/1.0',
+      'X-Monte-Signature': signature,
+      'X-Monte-Timestamp': Date.now().toString(),
+      'X-Monte-Webhook-Id': webhook.webhookId,
     };
 
     if (webhook.headers) {

@@ -1,6 +1,6 @@
-# Paya Webhook System
+# Monte Webhook System
 
-A comprehensive webhook system for integrating Paya with external systems (CRM, accounting, inventory, etc.).
+A comprehensive webhook system for integrating Monte with external systems (CRM, accounting, inventory, etc.).
 
 ## Features
 
@@ -33,7 +33,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 ```
 
 ## Event Types
@@ -198,7 +198,7 @@ GET /webhooks/:webhookId/stats
 
 ## Webhook Signature Verification
 
-Webhooks are signed using HMAC-SHA256. The signature is included in the `X-Paya-Signature` header.
+Webhooks are signed using HMAC-SHA256. The signature is included in the `X-Monte-Signature` header.
 
 ### Signature Format
 ```
@@ -280,10 +280,10 @@ def verify_signature(payload, signature, secret, tolerance=300):
 ### Headers
 ```
 Content-Type: application/json
-User-Agent: Paya-Webhook/1.0
-X-Paya-Signature: 1234567890.abcdef...
-X-Paya-Timestamp: 1234567890
-X-Paya-Webhook-Id: webhook_123
+User-Agent: Monte-Webhook/1.0
+X-Monte-Signature: 1234567890.abcdef...
+X-Monte-Timestamp: 1234567890
+X-Monte-Webhook-Id: webhook_123
 ```
 
 ## Retry Logic
@@ -364,7 +364,7 @@ Failed webhooks after max retries are moved to the dead letter queue. These can 
    - Check merchant ID matches
 
 2. **Signature verification failing**
-   - Ensure secret matches between Paya and your system
+   - Ensure secret matches between Monte and your system
    - Check timestamp tolerance (default 5 minutes)
    - Verify payload is not modified before verification
 
@@ -389,7 +389,7 @@ const app = express();
 app.use(express.json());
 
 app.post('/webhook', (req, res) => {
-  const signature = req.headers['x-paya-signature'];
+  const signature = req.headers['x-monte-signature'];
   const payload = req.body;
   
   if (!verifySignature(payload, signature, process.env.WEBHOOK_SECRET)) {
@@ -432,7 +432,7 @@ app = Flask(__name__)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    signature = request.headers.get('X-Paya-Signature')
+    signature = request.headers.get('X-Monte-Signature')
     payload = request.json
     
     if not verify_signature(payload, signature, app.config['WEBHOOK_SECRET']):
@@ -462,4 +462,4 @@ if __name__ == '__main__':
 
 ## Support
 
-For issues or questions about the webhook system, please refer to the main Paya documentation or contact support.
+For issues or questions about the webhook system, please refer to the main Monte documentation or contact support.

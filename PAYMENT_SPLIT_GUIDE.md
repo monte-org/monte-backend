@@ -1,6 +1,6 @@
 # Payment Split Management System
 
-Complete payment split functionality for the Paya platform, enabling merchants to split payments across multiple recipients for marketplace scenarios, affiliate payouts, and revenue sharing.
+Complete payment split functionality for the Monte platform, enabling merchants to split payments across multiple recipients for marketplace scenarios, affiliate payouts, and revenue sharing.
 
 ## Overview
 
@@ -92,7 +92,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=your_password
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 NODE_ENV=development
 PORT=4000
 ```
@@ -408,4 +408,4 @@ The smart contract implements several gas optimization strategies:
 For issues or questions:
 - GitHub Issues: [repository URL]
 - Documentation: [docs URL]
-- Email: support@paya.io
+- Email: support@monte.io

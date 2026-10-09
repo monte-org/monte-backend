@@ -1,4 +1,4 @@
-# Paya Data Architecture
+# Monte Data Architecture
 
 ## Table of Contents
 1. [Database Schema Documentation](#database-schema-documentation)
@@ -941,7 +941,7 @@ while (true) {
 
 ```bash
 # Before migration
-pg_dump -U postgres paya > backup_pre_migration.sql
+pg_dump -U postgres monte > backup_pre_migration.sql
 ```
 
 #### 2. Dry Run
@@ -1008,7 +1008,7 @@ async function archiveOldPayments() {
 // Move to S3 Glacier
 async function moveToColdStorage(data) {
   await s3.putObject({
-    Bucket: 'paya-archive',
+    Bucket: 'monte-archive',
     Key: `payments/${data.id}`,
     StorageClass: 'GLACIER',
     Body: JSON.stringify(data),
@@ -1053,7 +1053,7 @@ deletedAt: Date;
 
 ```bash
 # Daily full backup
-pg_dump -U postgres paya > backup_$(date +%Y%m%d).sql
+pg_dump -U postgres monte > backup_$(date +%Y%m%d).sql
 ```
 
 #### 2. Incremental Backups
@@ -1068,12 +1068,12 @@ archive_command = 'cp %p /var/lib/postgresql/archive/%f'
 
 ```bash
 # Restore to specific time
-pg_restore -U postgres -d paya --clean backup.sql
+pg_restore -U postgres -d monte --clean backup.sql
 ```
 
 ## Support
 
 For data architecture questions, contact:
-- **Database Team**: database@paya.io
-- **Data Engineering**: data@paya.io
-- **Slack**: #paya-data
+- **Database Team**: database@monte.io
+- **Data Engineering**: data@monte.io
+- **Slack**: #monte-data

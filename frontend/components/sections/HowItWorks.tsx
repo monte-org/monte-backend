@@ -7,7 +7,7 @@ const steps: Array<{ title: string; body: string }> = [
   },
   {
     title: "Customer pays in their preferred asset",
-    body: "Users pay with BTC, ETH, USDC, or XLM. Paya tracks status via webhooks and realtime updates.",
+    body: "Users pay with BTC, ETH, USDC, or XLM. Monte tracks status via webhooks and realtime updates.",
   },
   {
     title: "Automatic conversion + instant settlement",

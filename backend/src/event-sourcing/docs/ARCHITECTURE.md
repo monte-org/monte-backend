@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the Event Sourcing and CQRS (Command Query Responsibility Segregation) architecture implemented for the Paya backend system.
+This document describes the Event Sourcing and CQRS (Command Query Responsibility Segregation) architecture implemented for the Monte backend system.
 
 ## Architecture Components
 

@@ -346,11 +346,11 @@ export class WebhookTestingService {
   private buildTestHeaders(webhook: Webhook, signature: string): Record<string, string> {
     return {
       'Content-Type': 'application/json',
-      'User-Agent': 'Paya-Webhook-Test/1.0',
-      'X-Paya-Signature': signature,
-      'X-Paya-Timestamp': Date.now().toString(),
-      'X-Paya-Webhook-Id': webhook.webhookId,
-      'X-Paya-Test': 'true',
+      'User-Agent': 'Monte-Webhook-Test/1.0',
+      'X-Monte-Signature': signature,
+      'X-Monte-Timestamp': Date.now().toString(),
+      'X-Monte-Webhook-Id': webhook.webhookId,
+      'X-Monte-Test': 'true',
     };
   }
 

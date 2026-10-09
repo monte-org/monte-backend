@@ -1,4 +1,4 @@
-// Stellar blockchain watcher for Paya
+// Stellar blockchain watcher for Monte
 // Monitors deposit addresses for incoming payments and updates payment status
 // Run with: node frontend/watcher.js
 
@@ -145,7 +145,7 @@ async function check() {
 }
 
 // Start the watcher
-console.log('Starting Paya blockchain watcher...')
+console.log('Starting Monte blockchain watcher...')
 console.log(`Horizon URL: ${HORIZON_URL}`)
 console.log(`Checking payments every 10 seconds...`)
 

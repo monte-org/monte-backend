@@ -1,7 +1,7 @@
 # Authentication & Authorization Guide
 
 This module implements JWT-based authentication and role-based access control (RBAC)
-for the Paya backend, protecting API endpoints and user accounts.
+for the Monte backend, protecting API endpoints and user accounts.
 
 ## Endpoints
 
@@ -104,6 +104,6 @@ SMTP_HOST=...                 # optional; omit to log reset links instead of ema
 SMTP_PORT=587
 SMTP_USER=...
 SMTP_PASS=...
-SMTP_FROM=noreply@paya.io
+SMTP_FROM=noreply@monte.io
 NEXT_PUBLIC_SITE_URL=http://localhost:3000   # used to build the reset-password link
 ```

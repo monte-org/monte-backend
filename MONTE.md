@@ -1,5 +1,5 @@
-name=paya.md
-# Paya — Official Project Document
+name=monte.md
+# Monte — Official Project Document
 
 Version: 0.1.0  
 Status: MVP (demo-ready)  
@@ -9,17 +9,17 @@ License: MIT
 
 ## Summary
 
-Paya is a payments platform that helps businesses accept cryptocurrency and receive settlement in USDC on the Stellar network. The MVP demonstrates a complete, easy-to-follow checkout → settlement → merchant confirmation flow with on‑chain proof of payment.
+Monte is a payments platform that helps businesses accept cryptocurrency and receive settlement in USDC on the Stellar network. The MVP demonstrates a complete, easy-to-follow checkout → settlement → merchant confirmation flow with on‑chain proof of payment.
 
 ---
 
 ## Purpose
 
-Many merchants want to accept crypto but struggle with unreliable settlement, confusing reconciliation, and limited auditability. Paya addresses these needs by providing a simple, auditable payment flow: customers pay in crypto and merchants get a clear, verifiable receipt in a stable currency.
+Many merchants want to accept crypto but struggle with unreliable settlement, confusing reconciliation, and limited auditability. Monte addresses these needs by providing a simple, auditable payment flow: customers pay in crypto and merchants get a clear, verifiable receipt in a stable currency.
 
 ---
 
-## What Paya Provides (high level)
+## What Monte Provides (high level)
 
 - A simple checkout that generates deposit instructions (an address + unique memo).
 - Automatic detection of completed payments and a record that shows whether a payment is pending or settled.
@@ -35,7 +35,7 @@ All of this is delivered as an open-source project so others can inspect, run, a
 1. Merchant creates a checkout or shares a payment link.
 2. Customer opens the checkout, enters the amount, and is given deposit instructions (an address and a unique memo code).
 3. Customer sends the specified stablecoin to the address and includes the memo code so the payment is linked to the checkout.
-4. Paya watches the public network for that incoming payment; when it appears, the payment is marked as settled.
+4. Monte watches the public network for that incoming payment; when it appears, the payment is marked as settled.
 5. The merchant dashboard shows the settled payment and provides proof that the payment occurred.
 
 This flow gives merchants a user-friendly interface while keeping a tamper-resistant record of payments.
@@ -63,11 +63,11 @@ A short demo video or guided walkthrough can be provided to speed up verificatio
 
 ## Roadmap (what comes next)
 
-With support, Paya will:
+With support, Monte will:
 - Strengthen the on‑chain records and perform additional audits/tests.
 - Add merchant vaults and programmable splits for marketplaces and revenue sharing.
 - Provide a more robust backend for secure signing and production use.
-- Publish developer SDKs and integration guides so other teams can adopt Paya easily.
+- Publish developer SDKs and integration guides so other teams can adopt Monte easily.
 - Offer a hosted demo environment for quick evaluation.
 
 ---
@@ -90,4 +90,4 @@ Grant funds would be applied to:
 
 ---
 
-Thank you for reviewing Paya. The project is intentionally small and focused so reviewers and small teams can try the full payment flow and see verifiable settlement without heavy infrastructure.
+Thank you for reviewing Monte. The project is intentionally small and focused so reviewers and small teams can try the full payment flow and see verifiable settlement without heavy infrastructure.

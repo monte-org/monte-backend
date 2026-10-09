@@ -1,4 +1,4 @@
-# Paya Platform Monitoring Guide
+# Monte Platform Monitoring Guide
 
 ## Table of Contents
 1. [Metrics Collection](#metrics-collection)
@@ -58,32 +58,32 @@ export class MetricsService {
 
   constructor() {
     this.paymentCounter = new Counter({
-      name: 'paya_payments_total',
+      name: 'monte_payments_total',
       help: 'Total number of payments processed',
       labelNames: ['status', 'currency'],
     });
 
     this.paymentSuccessCounter = new Counter({
-      name: 'paya_payments_success_total',
+      name: 'monte_payments_success_total',
       help: 'Total number of successful payments',
       labelNames: ['currency'],
     });
 
     this.paymentFailureCounter = new Counter({
-      name: 'paya_payments_failure_total',
+      name: 'monte_payments_failure_total',
       help: 'Total number of failed payments',
       labelNames: ['reason'],
     });
 
     this.requestDuration = new Histogram({
-      name: 'paya_request_duration_seconds',
+      name: 'monte_request_duration_seconds',
       help: 'Request duration in seconds',
       labelNames: ['method', 'route', 'status'],
       buckets: [0.1, 0.5, 1, 2, 5, 10],
     });
 
     this.activeSubscriptions = new Gauge({
-      name: 'paya_subscriptions_active',
+      name: 'monte_subscriptions_active',
       help: 'Number of active subscriptions',
     });
   }
@@ -149,7 +149,7 @@ After=network.target postgresql.service
 [Service]
 Type=simple
 User=prometheus
-Environment="DATA_SOURCE_NAME=postgresql://postgres:password@localhost:5432/paya?sslmode=disable"
+Environment="DATA_SOURCE_NAME=postgresql://postgres:password@localhost:5432/monte?sslmode=disable"
 ExecStart=/usr/local/bin/postgres_exporter
 
 [Install]
@@ -232,17 +232,17 @@ export class StellarMetricsService {
 
   constructor() {
     this.horizonLatency = new Gauge({
-      name: 'paya_stellar_horizon_latency_seconds',
+      name: 'monte_stellar_horizon_latency_seconds',
       help: 'Horizon API latency in seconds',
     });
 
     this.sorobanLatency = new Gauge({
-      name: 'paya_stellar_soroban_latency_seconds',
+      name: 'monte_stellar_soroban_latency_seconds',
       help: 'Soroban RPC latency in seconds',
     });
 
     this.stellarTransactions = new Counter({
-      name: 'paya_stellar_transactions_total',
+      name: 'monte_stellar_transactions_total',
       help: 'Total Stellar transactions',
       labelNames: ['network', 'status'],
     });
@@ -301,11 +301,11 @@ export class CustomLogger implements LoggerService {
           ),
         }),
         new winston.transports.File({
-          filename: '/var/log/paya/error.log',
+          filename: '/var/log/monte/error.log',
           level: 'error',
         }),
         new winston.transports.File({
-          filename: '/var/log/paya/combined.log',
+          filename: '/var/log/monte/combined.log',
         }),
       ],
     });
@@ -374,7 +374,7 @@ sudo vim /etc/elasticsearch/elasticsearch.yml
 ```
 
 ```yaml
-cluster.name: paya-cluster
+cluster.name: monte-cluster
 node.name: node-1
 network.host: 0.0.0.0
 http.port: 9200
@@ -416,13 +416,13 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/paya/*.log
+    - /var/log/monte/*.log
   json.keys_under_root: true
   json.add_error_key: true
 
 output.elasticsearch:
   hosts: ["localhost:9200"]
-  index: "paya-logs-%{+yyyy.MM.dd}"
+  index: "monte-logs-%{+yyyy.MM.dd}"
 
 setup.kibana:
   host: "localhost:5601"
@@ -498,13 +498,13 @@ clients:
   - url: http://localhost:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: paya-logs
+  - job_name: monte-logs
     static_configs:
       - targets:
           - localhost
         labels:
-          job: paya
-          __path__: /var/log/paya/*.log
+          job: monte
+          __path__: /var/log/monte/*.log
 ```
 
 ```bash
@@ -526,7 +526,7 @@ groups:
     interval: 30s
     rules:
       - alert: ServiceDown
-        expr: up{job="paya-backend"} == 0
+        expr: up{job="monte-backend"} == 0
         for: 1m
         labels:
           severity: critical
@@ -538,7 +538,7 @@ groups:
 **High Error Rate:**
 ```yaml
       - alert: HighErrorRate
-        expr: rate(paya_request_duration_seconds_count{status=~"5.."}[5m]) > 0.1
+        expr: rate(monte_request_duration_seconds_count{status=~"5.."}[5m]) > 0.1
         for: 5m
         labels:
           severity: critical
@@ -567,7 +567,7 @@ groups:
     interval: 1m
     rules:
       - alert: HighResponseTime
-        expr: histogram_quantile(0.95, paya_request_duration_seconds_bucket) > 2
+        expr: histogram_quantile(0.95, monte_request_duration_seconds_bucket) > 2
         for: 10m
         labels:
           severity: warning
@@ -608,7 +608,7 @@ groups:
     interval: 1m
     rules:
       - alert: NewDeployment
-        expr: paya_build_info{version!="$previous_version"} > 0
+        expr: monte_build_info{version!="$previous_version"} > 0
         labels:
           severity: info
         annotations:
@@ -625,10 +625,10 @@ groups:
 receivers:
   - name: email-team
     email_configs:
-      - to: devops@paya.io
-        from: alertmanager@paya.io
+      - to: devops@monte.io
+        from: alertmanager@monte.io
         smarthost: smtp.gmail.com:587
-        auth_username: alertmanager@paya.io
+        auth_username: alertmanager@monte.io
         auth_password: your_password
 ```
 
@@ -639,7 +639,7 @@ receivers:
   - name: slack-team
     slack_configs:
       - api_url: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
-        channel: '#paya-alerts'
+        channel: '#monte-alerts'
         username: 'Alertmanager'
         title: '{{ .Status | toUpper }}: {{ .CommonLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
@@ -696,7 +696,7 @@ receivers:
   - name: default
     slack_configs:
       - api_url: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
-        channel: '#paya-alerts'
+        channel: '#monte-alerts'
 ```
 
 ## Dashboards
@@ -726,14 +726,14 @@ open http://localhost:3000
 ```json
 {
   "dashboard": {
-    "title": "Paya Platform Overview",
+    "title": "Monte Platform Overview",
     "panels": [
       {
         "title": "Request Rate",
         "type": "graph",
         "targets": [
           {
-            "expr": "rate(paya_request_duration_seconds_count[5m])",
+            "expr": "rate(monte_request_duration_seconds_count[5m])",
             "legendFormat": "{{method}} {{route}}"
           }
         ]
@@ -743,7 +743,7 @@ open http://localhost:3000
         "type": "graph",
         "targets": [
           {
-            "expr": "rate(paya_request_duration_seconds_count{status=~\"5..\"}[5m])",
+            "expr": "rate(monte_request_duration_seconds_count{status=~\"5..\"}[5m])",
             "legendFormat": "5xx Errors"
           }
         ]
@@ -753,11 +753,11 @@ open http://localhost:3000
         "type": "graph",
         "targets": [
           {
-            "expr": "histogram_quantile(0.95, paya_request_duration_seconds_bucket)",
+            "expr": "histogram_quantile(0.95, monte_request_duration_seconds_bucket)",
             "legendFormat": "P95"
           },
           {
-            "expr": "histogram_quantile(0.50, paya_request_duration_seconds_bucket)",
+            "expr": "histogram_quantile(0.50, monte_request_duration_seconds_bucket)",
             "legendFormat": "P50"
           }
         ]
@@ -767,7 +767,7 @@ open http://localhost:3000
         "type": "stat",
         "targets": [
           {
-            "expr": "paya_subscriptions_active"
+            "expr": "monte_subscriptions_active"
           }
         ]
       }
@@ -788,7 +788,7 @@ open http://localhost:3000
         "type": "graph",
         "targets": [
           {
-            "expr": "rate(paya_payments_total[5m])",
+            "expr": "rate(monte_payments_total[5m])",
             "legendFormat": "{{status}}"
           }
         ]
@@ -798,7 +798,7 @@ open http://localhost:3000
         "type": "stat",
         "targets": [
           {
-            "expr": "paya_payments_success_total / paya_payments_total"
+            "expr": "monte_payments_success_total / monte_payments_total"
           }
         ]
       },
@@ -807,7 +807,7 @@ open http://localhost:3000
         "type": "graph",
         "targets": [
           {
-            "expr": "avg(paya_payment_amount)",
+            "expr": "avg(monte_payment_amount)",
             "legendFormat": "{{currency}}"
           }
         ]
@@ -877,7 +877,7 @@ newrelic install -n newrelic-infra
 import * as newrelic from 'newrelic';
 
 newrelic.agent.start({
-  app_name: ['Paya Backend'],
+  app_name: ['Monte Backend'],
   license_key: process.env.NEW_RELIC_LICENSE_KEY,
   logging: {
     level: 'info'
@@ -909,7 +909,7 @@ apm:
 import { tracer } from 'dd-trace';
 
 tracer.init({
-  service: 'paya-backend',
+  service: 'monte-backend',
   env: process.env.NODE_ENV,
   logInjection: true,
 });
@@ -978,19 +978,19 @@ export class MemoryProfilerService {
 
 1. Create account at https://uptimerobot.com
 2. Add monitors:
-   - https://api.paya.io/api/v1/health
-   - https://paya.io
+   - https://api.monte.io/api/v1/health
+   - https://monte.io
 3. Configure alerts:
-   - Email: devops@paya.io
-   - Slack: #paya-alerts
+   - Email: devops@monte.io
+   - Slack: #monte-alerts
    - SMS: on-call phone
 
 #### StatusCake
 
 1. Create account at https://www.statuscake.com
 2. Add uptime tests:
-   - API endpoint: https://api.paya.io/api/v1/health
-   - Website: https://paya.io
+   - API endpoint: https://api.monte.io/api/v1/health
+   - Website: https://monte.io
 3. Configure performance tests
 4. Set up public status page
 
@@ -1014,9 +1014,9 @@ import axios from 'axios';
 export class SyntheticMonitoringService {
   async runHealthChecks(): Promise<void> {
     const endpoints = [
-      'https://api.paya.io/api/v1/health',
-      'https://api.paya.io/api/v1/payments',
-      'https://api.paya.io/api/v1/subscriptions',
+      'https://api.monte.io/api/v1/health',
+      'https://api.monte.io/api/v1/payments',
+      'https://api.monte.io/api/v1/subscriptions',
     ];
 
     for (const endpoint of endpoints) {
@@ -1045,7 +1045,7 @@ export default defineConfig({
     {
       name: 'chromium',
       use: {
-        baseURL: 'https://paya.io',
+        baseURL: 'https://monte.io',
       },
     },
   ],
@@ -1059,7 +1059,7 @@ import { test, expect } from '@playwright/test';
 
 test('homepage loads successfully', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(/Paya/);
+  await expect(page).toHaveTitle(/Monte/);
   await expect(page.locator('nav')).toBeVisible();
 });
 ```
@@ -1081,16 +1081,16 @@ npm run dev
 
 ```yaml
 # status.yml
-title: Paya Status
+title: Monte Status
 logo: /logo.png
 theme: light
 services:
   - name: API
     description: Backend API
-    url: https://api.paya.io/api/v1/health
+    url: https://api.monte.io/api/v1/health
   - name: Website
     description: Main website
-    url: https://paya.io
+    url: https://monte.io
   - name: Database
     description: PostgreSQL database
     url: tcp://localhost:5432
@@ -1102,6 +1102,6 @@ services:
 ## Support
 
 For monitoring issues, contact:
-- **DevOps Team**: devops@paya.io
+- **DevOps Team**: devops@monte.io
 - **On-Call**: +1-555-0123 (24/7)
-- **Slack**: #paya-ops
+- **Slack**: #monte-ops

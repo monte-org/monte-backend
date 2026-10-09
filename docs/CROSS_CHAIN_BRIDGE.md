@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Paya Cross-Chain Bridge enables trustless transfers between multiple blockchain networks using atomic swap protocols. This system allows merchants to accept payments from different blockchains (Stellar, Ethereum, Polygon, etc.) with automatic settlement and liquidity management.
+The Monte Cross-Chain Bridge enables trustless transfers between multiple blockchain networks using atomic swap protocols. This system allows merchants to accept payments from different blockchains (Stellar, Ethereum, Polygon, etc.) with automatic settlement and liquidity management.
 
 ## Architecture
 
@@ -561,4 +561,4 @@ Please refer to the main CONTRIBUTING.md file for guidelines on contributing to 
 
 ## License
 
-This cross-chain bridge system is part of the Paya platform and follows the same license terms.
+This cross-chain bridge system is part of the Monte platform and follows the same license terms.

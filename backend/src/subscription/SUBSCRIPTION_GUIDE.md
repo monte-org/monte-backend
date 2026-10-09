@@ -170,7 +170,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 ```
 
 ### Bull Queues

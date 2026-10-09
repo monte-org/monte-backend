@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Paya — Stripe for crypto payments",
+  title: "Monte — Stripe for crypto payments",
   description:
     "Open-source crypto payment infrastructure that accepts BTC, ETH, USDC, and XLM, settles as USDC on Stellar, and supports payouts, escrow, splits, and subscriptions.",
 };

@@ -1,8 +1,8 @@
-# Paya
+# Monte
 
 > **"Crypto payments — powered by Stellar."**
 
-Paya is an open-source, global crypto payment infrastructure that lets businesses and developers accept payments in multiple cryptocurrencies, automatically convert them to stablecoins, settle instantly on the Stellar network, and withdraw to bank accounts.
+Monte is an open-source, global crypto payment infrastructure that lets businesses and developers accept payments in multiple cryptocurrencies, automatically convert them to stablecoins, settle instantly on the Stellar network, and withdraw to bank accounts.
 
 ---
 
@@ -24,7 +24,7 @@ Paya is an open-source, global crypto payment infrastructure that lets businesse
 
 ## Overview
 
-### What Paya Does
+### What Monte Does
 
 | Feature | Description |
 |---|---|
@@ -78,7 +78,7 @@ Soroban Smart Contracts
 ## Repository Structure
 
 ```
-Paya/
+Monte/
 │
 ├── contracts/                        # Soroban smart contracts (Rust)
 │   ├── escrow_contract/
@@ -135,8 +135,8 @@ Paya/
 ### 1. Clone the Repository
 
 ```bash
-git clone  https://github.com/StellarPaya/paya.git
-cd paya
+git clone  https://github.com/StellarPaya/monte.git
+cd monte
 ```
 
 ### 2. Install Frontend Dependencies
@@ -288,7 +288,7 @@ SUBSCRIPTION_CONTRACT_ID=
 FEE_MANAGER_CONTRACT_ID=
 
 # Database
-DATABASE_URL=postgresql://localhost:5432/Paya
+DATABASE_URL=postgresql://localhost:5432/Monte
 
 # Auth
 JWT_SECRET=
@@ -384,4 +384,4 @@ Key areas where you can help:
 
 ## License
 
-MIT © Paya Contributors
+MIT © Monte Contributors

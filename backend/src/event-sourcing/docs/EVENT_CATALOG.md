@@ -1,6 +1,6 @@
 # Event Catalog
 
-This document provides a comprehensive catalog of all events in the Paya event-sourced system.
+This document provides a comprehensive catalog of all events in the Monte event-sourced system.
 
 ## Payment Events
 

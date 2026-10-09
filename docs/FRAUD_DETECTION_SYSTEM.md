@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Paya Fraud Detection and Risk Scoring System is a comprehensive, multi-layered security platform designed to protect merchants and customers from fraudulent transactions. This system combines real-time risk assessment, machine learning-based pattern recognition, behavioral analysis, network analysis, and smart contract integration to provide robust fraud prevention capabilities.
+The Monte Fraud Detection and Risk Scoring System is a comprehensive, multi-layered security platform designed to protect merchants and customers from fraudulent transactions. This system combines real-time risk assessment, machine learning-based pattern recognition, behavioral analysis, network analysis, and smart contract integration to provide robust fraud prevention capabilities.
 
 ## Architecture
 
@@ -286,7 +286,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 ```
 
 4. **Start Services**
@@ -499,4 +499,4 @@ Please refer to the main CONTRIBUTING.md file for guidelines on contributing to 
 
 ## License
 
-This fraud detection system is part of the Paya platform and follows the same license terms.
+This fraud detection system is part of the Monte platform and follows the same license terms.

@@ -1,6 +1,6 @@
 # Refund and Dispute Management System
 
-Complete refund and dispute management functionality for the Paya payment platform.
+Complete refund and dispute management functionality for the Monte payment platform.
 
 ## Overview
 
@@ -89,7 +89,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=your_password
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 NODE_ENV=development
 PORT=4000
 ```
@@ -317,4 +317,4 @@ npm test
 For issues or questions:
 - GitHub Issues: [repository URL]
 - Documentation: [docs URL]
-- Email: support@paya.io
+- Email: support@monte.io

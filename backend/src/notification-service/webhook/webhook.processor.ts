@@ -49,10 +49,10 @@ export class WebhookProcessor {
       const response = await axios.post(url, payload, {
         headers: {
           'Content-Type': 'application/json',
-          'X-Paya-Signature': signature,
-          'X-Paya-Event': delivery.eventType,
-          'X-Paya-Webhook-Id': webhookId,
-          'X-Paya-Delivery-Id': deliveryId,
+          'X-Monte-Signature': signature,
+          'X-Monte-Event': delivery.eventType,
+          'X-Monte-Webhook-Id': webhookId,
+          'X-Monte-Delivery-Id': deliveryId,
         },
         timeout: 30000,
       });

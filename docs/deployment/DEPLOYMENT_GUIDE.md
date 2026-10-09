@@ -1,4 +1,4 @@
-# Paya Platform Deployment Guide
+# Monte Platform Deployment Guide
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
@@ -27,7 +27,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=your_password
-DATABASE_NAME=paya
+DATABASE_NAME=monte
 
 # Redis
 REDIS_HOST=localhost
@@ -43,7 +43,7 @@ JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRATION=7d
 
 # Email (for notifications)
-EMAIL_FROM=noreply@paya.io
+EMAIL_FROM=noreply@monte.io
 SENDGRID_API_KEY=your_sendgrid_key
 
 # Application
@@ -58,8 +58,8 @@ API_PREFIX=api/v1
 
 #### 1. Clone Repository
 ```bash
-git clone https://github.com/0xNinx/paya.git
-cd paya
+git clone https://github.com/0xNinx/monte.git
+cd monte
 ```
 
 #### 2. Install Dependencies
@@ -87,10 +87,10 @@ npm install
 **Using Docker:**
 ```bash
 docker run -d \
-  --name paya-db \
+  --name monte-db \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=paya \
+  -e POSTGRES_DB=monte \
   -p 5432:5432 \
   postgres:14
 ```
@@ -98,9 +98,9 @@ docker run -d \
 **Or using local PostgreSQL:**
 ```bash
 sudo -u postgres psql
-CREATE DATABASE paya;
-CREATE USER paya_user WITH PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE paya TO paya_user;
+CREATE DATABASE monte;
+CREATE USER monte_user WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE monte TO monte_user;
 \q
 ```
 
@@ -109,7 +109,7 @@ GRANT ALL PRIVILEGES ON DATABASE paya TO paya_user;
 **Using Docker:**
 ```bash
 docker run -d \
-  --name paya-redis \
+  --name monte-redis \
   -p 6379:6379 \
   redis:7
 ```
@@ -167,7 +167,7 @@ docker-compose -f docker-compose.dev.yml down
 
 ### Prerequisites
 - Staging server access (SSH)
-- Domain name configured (e.g., staging.paya.io)
+- Domain name configured (e.g., staging.monte.io)
 - SSL certificate configured
 - Database backup from production (optional)
 
@@ -177,11 +177,11 @@ docker-compose -f docker-compose.dev.yml down
 
 ```bash
 # SSH into staging server
-ssh user@staging.paya.io
+ssh user@staging.monte.io
 
 # Clone repository
-git clone https://github.com/0xNinx/paya.git
-cd paya
+git clone https://github.com/0xNinx/monte.git
+cd monte
 git checkout staging
 ```
 
@@ -203,7 +203,7 @@ cp .env.staging .env
 
 ```bash
 # Create staging database
-createdb paya_staging
+createdb monte_staging
 
 # Run migrations
 npm run migration:run
@@ -217,21 +217,21 @@ npm run build
 
 #### 6. Setup Systemd Service
 
-Create `/etc/systemd/system/paya-backend.service`:
+Create `/etc/systemd/system/monte-backend.service`:
 ```ini
 [Unit]
-Description=Paya Backend API
+Description=Monte Backend API
 After=network.target postgresql.service redis.service
 
 [Service]
 Type=simple
-User=paya
-WorkingDirectory=/home/paya/backend
-ExecStart=/usr/bin/node /home/paya/backend/dist/main.js
+User=monte
+WorkingDirectory=/home/monte/backend
+ExecStart=/usr/bin/node /home/monte/backend/dist/main.js
 Restart=always
 RestartSec=10
 Environment=NODE_ENV=staging
-EnvironmentFile=/home/paya/backend/.env
+EnvironmentFile=/home/monte/backend/.env
 
 [Install]
 WantedBy=multi-user.target
@@ -239,17 +239,17 @@ WantedBy=multi-user.target
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable paya-backend
-sudo systemctl start paya-backend
+sudo systemctl enable monte-backend
+sudo systemctl start monte-backend
 ```
 
 #### 7. Setup Nginx Reverse Proxy
 
-Create `/etc/nginx/sites-available/paya-staging`:
+Create `/etc/nginx/sites-available/monte-staging`:
 ```nginx
 server {
     listen 80;
-    server_name staging.paya.io;
+    server_name staging.monte.io;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -266,7 +266,7 @@ server {
 ```
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/paya-staging /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/monte-staging /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -274,7 +274,7 @@ sudo systemctl reload nginx
 #### 8. Setup SSL with Let's Encrypt
 
 ```bash
-sudo certbot --nginx -d staging.paya.io
+sudo certbot --nginx -d staging.monte.io
 ```
 
 #### 9. Deploy Frontend
@@ -284,24 +284,24 @@ cd ../frontend
 npm run build
 
 # Serve with Nginx
-sudo cp -r dist/* /var/www/paya-staging/
+sudo cp -r dist/* /var/www/monte-staging/
 ```
 
 #### 10. Verify Deployment
 
 ```bash
 # Health check
-curl https://staging.paya.io/api/v1/health
+curl https://staging.monte.io/api/v1/health
 
 # Check logs
-sudo journalctl -u paya-backend -f
+sudo journalctl -u monte-backend -f
 ```
 
 ## Production Deployment
 
 ### Prerequisites
 - Production	server access (SSH)
-- Domain name configured (e.g., api.paya.io)
+- Domain name configured (e.g., api.monte.io)
 - SSL certificate configured
 - Database backup strategy in place
 - Monitoring and alerting configured
@@ -321,21 +321,21 @@ sudo journalctl -u paya-backend -f
 
 ```bash
 # Database backup
-pg_dump -U postgres paya > backup_$(date +%Y%m%d_%H%M%S).sql
+pg_dump -U postgres monte > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # Backup current deployment
-cd /home/paya
-tar -czf paya_backup_$(date +%Y%m%d_%H%M%S).tar.gz backend/
+cd /home/monte
+tar -czf monte_backup_$(date +%Y%m%d_%H%M%S).tar.gz backend/
 ```
 
 #### 2. Deploy New Version
 
 ```bash
 # SSH into production server
-ssh user@prod.paya.io
+ssh user@prod.monte.io
 
 # Navigate to deployment directory
-cd /home/paya
+cd /home/monte
 
 # Pull latest code
 git fetch origin
@@ -361,13 +361,13 @@ Using PM2:
 npm install -g pm2
 
 # Start new instance
-pm2 start dist/main.js --name paya-backend-new
+pm2 start dist/main.js --name monte-backend-new
 
 # Switch traffic
-pm2 gracefulReload paya-backend
+pm2 gracefulReload monte-backend
 
 # Cleanup old instance
-pm2 delete paya-backend-old
+pm2 delete monte-backend-old
 ```
 
 Or using Blue-Green deployment:
@@ -385,21 +385,21 @@ PORT=3001 npm run start:prod &
 
 ```bash
 # Health check
-curl https://api.paya.io/api/v1/health
+curl https://api.monte.io/api/v1/health
 
 # Check critical endpoints
-curl https://api.paya.io/api/v1/payments
-curl https://api.paya.io/api/v1/subscriptions
+curl https://api.monte.io/api/v1/payments
+curl https://api.monte.io/api/v1/subscriptions
 
 # Check logs
-pm2 logs paya-backend
+pm2 logs monte-backend
 ```
 
 #### 5. Post-Deployment Verification
 
 ```bash
 # Verify database migrations
-psql -U postgres -d paya -c "SELECT version FROM schema_migrations;"
+psql -U postgres -d monte -c "SELECT version FROM schema_migrations;"
 
 # Verify Redis connectivity
 redis-cli ping
@@ -564,10 +564,10 @@ npm run migration:show
 touch migrations/20240101_add_new_table.sql
 
 # Run migration
-psql -U postgres -d paya -f migrations/20240101_add_new_table.sql
+psql -U postgres -d monte -f migrations/20240101_add_new_table.sql
 
 # Verify migration
-psql -U postgres -d paya -c "\d new_table"
+psql -U postgres -d monte -c "\d new_table"
 ```
 
 ### Migration Best Practices
@@ -608,13 +608,13 @@ COMMIT;
 
 ```bash
 # Stop application
-sudo systemctl stop paya-backend
+sudo systemctl stop monte-backend
 
 # Restore database
-psql -U postgres -d paya < backup_20240101_120000.sql
+psql -U postgres -d monte < backup_20240101_120000.sql
 
 # Restart application
-sudo systemctl start paya-backend
+sudo systemctl start monte-backend
 ```
 
 #### 2. Revert Migration
@@ -641,7 +641,7 @@ git checkout <previous_commit_hash>
 
 # Rebuild and restart
 npm run build
-sudo systemctl restart paya-backend
+sudo systemctl restart monte-backend
 ```
 
 #### 2. PM2 Rollback
@@ -651,22 +651,22 @@ sudo systemctl restart paya-backend
 pm2 list
 
 # Rollback to previous version
-pm2 reload paya-backend --update-env
+pm2 reload monte-backend --update-env
 
 # Or switch to specific version
-pm2 stop paya-backend
-pm2 start dist/main.js --name paya-backend-rollback
+pm2 stop monte-backend
+pm2 start dist/main.js --name monte-backend-rollback
 ```
 
 #### 3. Docker Rollback
 
 ```bash
 # List images
-docker images | grep paya
+docker images | grep monte
 
 # Rollback to previous image
-docker stop paya-backend
-docker run -d --name paya-backend-rollback paya-backend:previous-tag
+docker stop monte-backend
+docker run -d --name monte-backend-rollback monte-backend:previous-tag
 
 # Update load balancer to point to rollback container
 ```
@@ -705,10 +705,10 @@ soroban contract invoke \
 
 ```bash
 # Verify application health
-curl https://api.paya.io/api/v1/health
+curl https://api.monte.io/api/v1/health
 
 # Verify database integrity
-psql -U postgres -d paya -c "SELECT COUNT(*) FROM subscriptions;"
+psql -U postgres -d monte -c "SELECT COUNT(*) FROM subscriptions;"
 
 # Verify contract functionality
 soroban contract invoke \
@@ -718,7 +718,7 @@ soroban contract invoke \
   get_admin
 
 # Check logs
-pm2 logs paya-backend --lines 100
+pm2 logs monte-backend --lines 100
 ```
 
 ## Troubleshooting
@@ -731,7 +731,7 @@ pm2 logs paya-backend --lines 100
 sudo systemctl status postgresql
 
 # Check connection
-psql -U postgres -h localhost -d paya
+psql -U postgres -h localhost -d monte
 
 # Verify environment variables
 echo $DATABASE_HOST
@@ -780,6 +780,6 @@ npm --version
 ## Support
 
 For deployment issues, contact:
-- **DevOps Team**: devops@paya.io
+- **DevOps Team**: devops@monte.io
 - **On-Call**: +1-555-0123 (24/7)
-- **Slack**: #paya-ops
+- **Slack**: #monte-ops

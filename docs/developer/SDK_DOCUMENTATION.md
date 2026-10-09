@@ -1,4 +1,4 @@
-# Paya SDK Documentation
+# Monte SDK Documentation
 
 ## Table of Contents
 1. [JavaScript SDK](#javascript-sdk)
@@ -10,17 +10,17 @@
 ### Installation
 
 ```bash
-npm install @paya/sdk
+npm install @monte/sdk
 # or
-yarn add @paya/sdk
+yarn add @monte/sdk
 ```
 
 ### Setup
 
 ```javascript
-import { PayaClient } from '@paya/sdk';
+import { MonteClient } from '@monte/sdk';
 
-const paya = new PayaClient({
+const monte = new MonteClient({
   apiKey: 'your_api_key',
   environment: 'production', // or 'test'
   timeout: 30000, // optional: request timeout in milliseconds
@@ -31,7 +31,7 @@ const paya = new PayaClient({
 
 | Option | Type | Required | Default | Description |
 |--------|------|----------|---------|-------------|
-| `apiKey` | string | Yes | - | Your Paya API key |
+| `apiKey` | string | Yes | - | Your Monte API key |
 | `environment` | string | No | `'production'` | Environment: `'test'` or `'production'` |
 | `timeout` | number | No | `30000` | Request timeout in milliseconds |
 | `baseUrl` | string | No | Auto-detected | Custom base URL for API |
@@ -41,7 +41,7 @@ const paya = new PayaClient({
 #### Create Payment
 
 ```javascript
-const payment = await paya.payments.create({
+const payment = await monte.payments.create({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -83,7 +83,7 @@ const payment = await paya.payments.create({
 #### Get Payment
 
 ```javascript
-const payment = await paya.payments.get('payment_id');
+const payment = await monte.payments.get('payment_id');
 ```
 
 **Parameters:**
@@ -108,7 +108,7 @@ const payment = await paya.payments.get('payment_id');
 #### List Payments
 
 ```javascript
-const payments = await paya.payments.list({
+const payments = await monte.payments.list({
   status: 'COMPLETED',
   limit: 10,
   offset: 0,
@@ -137,7 +137,7 @@ const payments = await paya.payments.list({
 #### Refund Payment
 
 ```javascript
-const refund = await paya.payments.refund('payment_id', {
+const refund = await monte.payments.refund('payment_id', {
   amount: 50.00, // optional: full refund if not specified
   reason: 'Customer request',
 });
@@ -164,7 +164,7 @@ const refund = await paya.payments.refund('payment_id', {
 #### Wait for Confirmation
 
 ```javascript
-const payment = await paya.payments.waitForConfirmation('payment_id', {
+const payment = await monte.payments.waitForConfirmation('payment_id', {
   timeout: 300000, // 5 minutes
   pollInterval: 5000, // 5 seconds
 });
@@ -182,7 +182,7 @@ const payment = await paya.payments.waitForConfirmation('payment_id', {
 #### Create Subscription
 
 ```javascript
-const subscription = await paya.subscriptions.create({
+const subscription = await monte.subscriptions.create({
   planId: 'plan_123',
   customerId: 'customer_456',
   customerEmail: 'customer@example.com',
@@ -216,13 +216,13 @@ const subscription = await paya.subscriptions.create({
 #### Get Subscription
 
 ```javascript
-const subscription = await paya.subscriptions.get('subscription_id');
+const subscription = await monte.subscriptions.get('subscription_id');
 ```
 
 #### List Subscriptions
 
 ```javascript
-const subscriptions = await paya.subscriptions.list({
+const subscriptions = await monte.subscriptions.list({
   status: 'ACTIVE',
   limit: 10,
 });
@@ -231,7 +231,7 @@ const subscriptions = await paya.subscriptions.list({
 #### Cancel Subscription
 
 ```javascript
-await paya.subscriptions.cancel('subscription_id', {
+await monte.subscriptions.cancel('subscription_id', {
   cancelAtPeriodEnd: true,
 });
 ```
@@ -239,7 +239,7 @@ await paya.subscriptions.cancel('subscription_id', {
 #### Update Subscription
 
 ```javascript
-const subscription = await paya.subscriptions.update('subscription_id', {
+const subscription = await monte.subscriptions.update('subscription_id', {
   planId: 'new_plan_id',
   paymentMethodId: 'new_payment_method_id',
 });
@@ -250,7 +250,7 @@ const subscription = await paya.subscriptions.update('subscription_id', {
 #### Create Webhook Handler
 
 ```javascript
-const webhookHandler = paya.webhooks.createHandler({
+const webhookHandler = monte.webhooks.createHandler({
   secret: 'your_webhook_secret',
 });
 ```
@@ -281,13 +281,13 @@ webhookHandler.on('subscription.billed', (data) => {
 #### Express.js Middleware
 
 ```javascript
-app.post('/webhooks/paya', webhookHandler.middleware());
+app.post('/webhooks/monte', webhookHandler.middleware());
 ```
 
 #### Verify Webhook Signature
 
 ```javascript
-const isValid = paya.webhooks.verifySignature(
+const isValid = monte.webhooks.verifySignature(
   payload,
   signature,
   'your_webhook_secret'
@@ -298,18 +298,18 @@ const isValid = paya.webhooks.verifySignature(
 
 ```javascript
 try {
-  const payment = await paya.payments.create({
+  const payment = await monte.payments.create({
     amount: 100.00,
     currency: 'XLM',
     merchantId: 'your_merchant_id',
     customerEmail: 'customer@example.com',
   });
 } catch (error) {
-  if (error instanceof PayaAPIError) {
+  if (error instanceof MonteAPIError) {
     console.error('API Error:', error.message);
     console.error('Status:', error.status);
     console.error('Code:', error.code);
-  } else if (error instanceof PayaNetworkError) {
+  } else if (error instanceof MonteNetworkError) {
     console.error('Network Error:', error.message);
   } else {
     console.error('Unknown Error:', error);
@@ -319,25 +319,25 @@ try {
 
 ### Error Types
 
-- `PayaAPIError`: API returned an error response
-- `PayaNetworkError`: Network error occurred
-- `PayaValidationError`: Request validation failed
-- `PayaAuthenticationError`: Authentication failed
+- `MonteAPIError`: API returned an error response
+- `MonteNetworkError`: Network error occurred
+- `MonteValidationError`: Request validation failed
+- `MonteAuthenticationError`: Authentication failed
 
 ## Python SDK
 
 ### Installation
 
 ```bash
-pip install paya-sdk
+pip install monte-sdk
 ```
 
 ### Setup
 
 ```python
-from paya import PayaClient
+from monte import MonteClient
 
-paya = PayaClient(
+monte = MonteClient(
     api_key='your_api_key',
     environment='production',  # or 'test'
     timeout=30,  # optional: request timeout in seconds
@@ -348,7 +348,7 @@ paya = PayaClient(
 
 | Option | Type | Required | Default | Description |
 |--------|------|----------|---------|-------------|
-| `api_key` | str | Yes | - | Your Paya API key |
+| `api_key` | str | Yes | - | Your Monte API key |
 | `environment` | str | No | `'production'` | Environment: `'test'` or `'production'` |
 | `timeout` | int | No | `30` | Request timeout in seconds |
 | `base_url` | str | No | Auto-detected | Custom base URL for API |
@@ -358,7 +358,7 @@ paya = PayaClient(
 #### Create Payment
 
 ```python
-payment = paya.payments.create(
+payment = monte.payments.create(
     amount=100.00,
     currency='XLM',
     merchant_id='your_merchant_id',
@@ -390,13 +390,13 @@ payment = paya.payments.create(
 #### Get Payment
 
 ```python
-payment = paya.payments.get('payment_id')
+payment = monte.payments.get('payment_id')
 ```
 
 #### List Payments
 
 ```python
-payments = paya.payments.list(
+payments = monte.payments.list(
     status='COMPLETED',
     limit=10,
     offset=0,
@@ -408,7 +408,7 @@ payments = paya.payments.list(
 #### Refund Payment
 
 ```python
-refund = paya.payments.refund(
+refund = monte.payments.refund(
     'payment_id',
     amount=50.00,  # optional
     reason='Customer request'
@@ -418,7 +418,7 @@ refund = paya.payments.refund(
 #### Wait for Confirmation
 
 ```python
-payment = paya.payments.wait_for_confirmation(
+payment = monte.payments.wait_for_confirmation(
     'payment_id',
     timeout=300,  # 5 minutes
     poll_interval=5  # 5 seconds
@@ -430,7 +430,7 @@ payment = paya.payments.wait_for_confirmation(
 #### Create Subscription
 
 ```python
-subscription = paya.subscriptions.create(
+subscription = monte.subscriptions.create(
     plan_id='plan_123',
     customer_id='customer_456',
     customer_email='customer@example.com',
@@ -443,13 +443,13 @@ subscription = paya.subscriptions.create(
 #### Get Subscription
 
 ```python
-subscription = paya.subscriptions.get('subscription_id')
+subscription = monte.subscriptions.get('subscription_id')
 ```
 
 #### List Subscriptions
 
 ```python
-subscriptions = paya.subscriptions.list(
+subscriptions = monte.subscriptions.list(
     status='ACTIVE',
     limit=10
 )
@@ -458,7 +458,7 @@ subscriptions = paya.subscriptions.list(
 #### Cancel Subscription
 
 ```python
-paya.subscriptions.cancel(
+monte.subscriptions.cancel(
     'subscription_id',
     cancel_at_period_end=True
 )
@@ -467,7 +467,7 @@ paya.subscriptions.cancel(
 #### Update Subscription
 
 ```python
-subscription = paya.subscriptions.update(
+subscription = monte.subscriptions.update(
     'subscription_id',
     plan_id='new_plan_id',
     payment_method_id='new_payment_method_id'
@@ -479,7 +479,7 @@ subscription = paya.subscriptions.update(
 #### Create Webhook Handler
 
 ```python
-from paya.webhooks import WebhookHandler
+from monte.webhooks import WebhookHandler
 
 webhook_handler = WebhookHandler(secret='your_webhook_secret')
 ```
@@ -509,7 +509,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-@app.route('/webhooks/paya', methods=['POST'])
+@app.route('/webhooks/monte', methods=['POST'])
 def handle_webhook():
     event = webhook_handler.verify(request)
     # Event is automatically routed to handlers
@@ -519,7 +519,7 @@ def handle_webhook():
 #### Verify Signature
 
 ```python
-is_valid = paya.webhooks.verify_signature(
+is_valid = monte.webhooks.verify_signature(
     payload,
     signature,
     'your_webhook_secret'
@@ -529,22 +529,22 @@ is_valid = paya.webhooks.verify_signature(
 ### Error Handling
 
 ```python
-from paya.errors import PayaAPIError, PayaNetworkError, PayaValidationError
+from monte.errors import MonteAPIError, MonteNetworkError, MonteValidationError
 
 try:
-    payment = paya.payments.create(
+    payment = monte.payments.create(
         amount=100.00,
         currency='XLM',
         merchant_id='your_merchant_id',
         customer_email='customer@example.com'
     )
-except PayaAPIError as e:
+except MonteAPIError as e:
     print(f"API Error: {e.message}")
     print(f"Status: {e.status}")
     print(f"Code: {e.code}")
-except PayaNetworkError as e:
+except MonteNetworkError as e:
     print(f"Network Error: {e.message}")
-except PayaValidationError as e:
+except MonteValidationError as e:
     print(f"Validation Error: {e.message}")
 except Exception as e:
     print(f"Unknown Error: {e}")
@@ -552,17 +552,17 @@ except Exception as e:
 
 ### Error Types
 
-- `PayaAPIError`: API returned an error response
-- `PayaNetworkError`: Network error occurred
-- `PayaValidationError`: Request validation failed
-- `PayaAuthenticationError`: Authentication failed
+- `MonteAPIError`: API returned an error response
+- `MonteNetworkError`: Network error occurred
+- `MonteValidationError`: Request validation failed
+- `MonteAuthenticationError`: Authentication failed
 
 ## Go SDK
 
 ### Installation
 
 ```bash
-go get github.com/0xNinx/paya-go-sdk
+go get github.com/0xNinx/monte-go-sdk
 ```
 
 ### Setup
@@ -571,13 +571,13 @@ go get github.com/0xNinx/paya-go-sdk
 package main
 
 import (
-    "github.com/0xNinx/paya-go-sdk"
+    "github.com/0xNinx/monte-go-sdk"
 )
 
 func main() {
-    client := paya.NewClient(&paya.Config{
+    client := monte.NewClient(&monte.Config{
         APIKey:      "your_api_key",
-        Environment: paya.EnvironmentProduction, // or paya.EnvironmentTest
+        Environment: monte.EnvironmentProduction, // or monte.EnvironmentTest
         Timeout:     30, // optional: request timeout in seconds
     })
 }
@@ -587,7 +587,7 @@ func main() {
 
 | Option | Type | Required | Default | Description |
 |--------|------|----------|---------|-------------|
-| `APIKey` | string | Yes | - | Your Paya API key |
+| `APIKey` | string | Yes | - | Your Monte API key |
 | `Environment` | Environment | No | `EnvironmentProduction` | Environment |
 | `Timeout` | int | No | `30` | Request timeout in seconds |
 | `BaseURL` | string | No | Auto-detected | Custom base URL for API |
@@ -597,7 +597,7 @@ func main() {
 #### Create Payment
 
 ```go
-payment, err := client.Payments.Create(&paya.CreatePaymentRequest{
+payment, err := client.Payments.Create(&monte.CreatePaymentRequest{
     Amount:        100.00,
     Currency:      "XLM",
     MerchantID:    "your_merchant_id",
@@ -643,8 +643,8 @@ if err != nil {
 #### List Payments
 
 ```go
-payments, err := client.Payments.List(&paya.ListPaymentsRequest{
-    Status:    paya.PaymentStatusCompleted,
+payments, err := client.Payments.List(&monte.ListPaymentsRequest{
+    Status:    monte.PaymentStatusCompleted,
     Limit:     10,
     Offset:    0,
     StartDate: "2024-01-01",
@@ -659,7 +659,7 @@ if err != nil {
 #### Refund Payment
 
 ```go
-refund, err := client.Payments.Refund("payment_id", &paya.RefundPaymentRequest{
+refund, err := client.Payments.Refund("payment_id", &monte.RefundPaymentRequest{
     Amount: 50.00, // optional
     Reason: "Customer request",
 })
@@ -674,7 +674,7 @@ if err != nil {
 ```go
 payment, err := client.Payments.WaitForConfirmation(
     "payment_id",
-    &paya.WaitForConfirmationOptions{
+    &monte.WaitForConfirmationOptions{
         Timeout:      300, // 5 minutes
         PollInterval: 5,  // 5 seconds
     },
@@ -690,7 +690,7 @@ if err != nil {
 #### Create Subscription
 
 ```go
-subscription, err := client.Subscriptions.Create(&paya.CreateSubscriptionRequest{
+subscription, err := client.Subscriptions.Create(&monte.CreateSubscriptionRequest{
     PlanID:         "plan_123",
     CustomerID:     "customer_456",
     CustomerEmail:  "customer@example.com",
@@ -717,8 +717,8 @@ if err != nil {
 #### List Subscriptions
 
 ```go
-subscriptions, err := client.Subscriptions.List(&paya.ListSubscriptionsRequest{
-    Status: paya.SubscriptionStatusActive,
+subscriptions, err := client.Subscriptions.List(&monte.ListSubscriptionsRequest{
+    Status: monte.SubscriptionStatusActive,
     Limit:  10,
 })
 
@@ -730,7 +730,7 @@ if err != nil {
 #### Cancel Subscription
 
 ```go
-err := client.Subscriptions.Cancel("subscription_id", &paya.CancelSubscriptionRequest{
+err := client.Subscriptions.Cancel("subscription_id", &monte.CancelSubscriptionRequest{
     CancelAtPeriodEnd: true,
 })
 
@@ -742,7 +742,7 @@ if err != nil {
 #### Update Subscription
 
 ```go
-subscription, err := client.Subscriptions.Update("subscription_id", &paya.UpdateSubscriptionRequest{
+subscription, err := client.Subscriptions.Update("subscription_id", &monte.UpdateSubscriptionRequest{
     PlanID:         "new_plan_id",
     PaymentMethodID: "new_payment_method_id",
 })
@@ -757,7 +757,7 @@ if err != nil {
 #### Create Webhook Handler
 
 ```go
-import "github.com/0xNinx/paya-go-sdk/webhooks"
+import "github.com/0xNinx/monte-go-sdk/webhooks"
 
 handler := webhooks.NewHandler("your_webhook_secret")
 ```
@@ -787,7 +787,7 @@ package main
 
 import (
     "net/http"
-    "github.com/0xNinx/paya-go-sdk/webhooks"
+    "github.com/0xNinx/monte-go-sdk/webhooks"
 )
 
 func webhookHandler(w http.ResponseWriter, r *http.Request) {
@@ -806,7 +806,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    http.HandleFunc("/webhooks/paya", webhookHandler)
+    http.HandleFunc("/webhooks/monte", webhookHandler)
     http.ListenAndServe(":3000", nil)
 }
 ```
@@ -824,7 +824,7 @@ isValid := webhooks.VerifySignature(
 ### Error Handling
 
 ```go
-payment, err := client.Payments.Create(&paya.CreatePaymentRequest{
+payment, err := client.Payments.Create(&monte.CreatePaymentRequest{
     Amount:        100.00,
     Currency:      "XLM",
     MerchantID:    "your_merchant_id",
@@ -833,13 +833,13 @@ payment, err := client.Payments.Create(&paya.CreatePaymentRequest{
 
 if err != nil {
     switch e := err.(type) {
-    case *paya.APIError:
+    case *monte.APIError:
         fmt.Printf("API Error: %s\n", e.Message)
         fmt.Printf("Status: %d\n", e.Status)
         fmt.Printf("Code: %s\n", e.Code)
-    case *paya.NetworkError:
+    case *monte.NetworkError:
         fmt.Printf("Network Error: %s\n", e.Message)
-    case *paya.ValidationError:
+    case *monte.ValidationError:
         fmt.Printf("Validation Error: %s\n", e.Message)
     default:
         fmt.Printf("Unknown Error: %s\n", err)
@@ -859,7 +859,7 @@ if err != nil {
 ### Payment Splits
 
 ```javascript
-const payment = await paya.payments.create({
+const payment = await monte.payments.create({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -882,7 +882,7 @@ const payment = await paya.payments.create({
 ### Escrow
 
 ```javascript
-const payment = await paya.payments.create({
+const payment = await monte.payments.create({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -898,7 +898,7 @@ const payment = await paya.payments.create({
 ### Custom Metadata
 
 ```javascript
-const payment = await paya.payments.create({
+const payment = await monte.payments.create({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -919,7 +919,7 @@ Always handle errors properly:
 
 ```javascript
 try {
-  const payment = await paya.payments.create({...});
+  const payment = await monte.payments.create({...});
 } catch (error) {
   // Handle error appropriately
   console.error('Payment failed:', error);
@@ -936,7 +936,7 @@ Implement retry logic for transient failures:
 async function createPaymentWithRetry(paymentData, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
     try {
-      return await paya.payments.create(paymentData);
+      return await monte.payments.create(paymentData);
     } catch (error) {
       if (i === maxRetries - 1) throw error;
       await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
@@ -950,7 +950,7 @@ async function createPaymentWithRetry(paymentData, maxRetries = 3) {
 Use idempotency keys to prevent duplicate payments:
 
 ```javascript
-const payment = await paya.payments.create({
+const payment = await monte.payments.create({
   amount: 100.00,
   currency: 'XLM',
   merchantId: 'your_merchant_id',
@@ -964,7 +964,7 @@ const payment = await paya.payments.create({
 Always verify webhook signatures:
 
 ```javascript
-const isValid = paya.webhooks.verifySignature(
+const isValid = monte.webhooks.verifySignature(
   payload,
   signature,
   'your_webhook_secret'
@@ -978,6 +978,6 @@ if (!isValid) {
 ## Support
 
 For SDK issues, contact:
-- **GitHub Issues**: https://github.com/0xNinx/paya/issues
-- **Email**: sdk@paya.io
-- **Slack**: #paya-sdk
+- **GitHub Issues**: https://github.com/0xNinx/monte/issues
+- **Email**: sdk@monte.io
+- **Slack**: #monte-sdk

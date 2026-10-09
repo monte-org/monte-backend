@@ -1,6 +1,6 @@
-# Paya API Documentation
+# Monte API Documentation
 
-Complete production-ready API documentation for the Paya payment platform backend services.
+Complete production-ready API documentation for the Monte payment platform backend services.
 
 ## Table of Contents
 
@@ -21,7 +21,7 @@ Complete production-ready API documentation for the Paya payment platform backen
 
 ## Overview
 
-The Paya API provides a comprehensive RESTful interface for managing payments, subscriptions, refunds, webhooks, and other payment-related operations. All endpoints use JSON for request and response bodies.
+The Monte API provides a comprehensive RESTful interface for managing payments, subscriptions, refunds, webhooks, and other payment-related operations. All endpoints use JSON for request and response bodies.
 
 ### API Version
 
@@ -39,13 +39,13 @@ Current API version: `v1`
 
 | Environment | Base URL |
 |-------------|----------|
-| Production | `https://api.paya.io/api/v1` |
-| Testnet | `https://test-api.paya.io/api/v1` |
+| Production | `https://api.monte.io/api/v1` |
+| Testnet | `https://test-api.monte.io/api/v1` |
 | Local Development | `http://localhost:3000/api/v1` |
 
 ## Authentication
 
-The Paya API uses JWT (JSON Web Token) authentication for securing endpoints.
+The Monte API uses JWT (JSON Web Token) authentication for securing endpoints.
 
 ### Authentication Methods
 
@@ -69,7 +69,7 @@ X-API-Key: <api_key>
 
 ## Rate Limiting
 
-The Paya API implements rate limiting to prevent abuse and ensure fair usage.
+The Monte API implements rate limiting to prevent abuse and ensure fair usage.
 
 ### Rate Limit Headers
 
@@ -109,7 +109,7 @@ See [Rate Limiting Documentation](./RATE_LIMITING.md) for detailed rate limit po
 
 ## Error Handling
 
-The Paya API uses standard HTTP status codes and provides detailed error messages.
+The Monte API uses standard HTTP status codes and provides detailed error messages.
 
 ### HTTP Status Codes
 
@@ -215,8 +215,8 @@ Manages webhook endpoints, event delivery, testing, and troubleshooting.
 
 An interactive API explorer is available for testing API endpoints directly from your browser.
 
-- **Production**: https://api.paya.io/docs
-- **Testnet**: https://test-api.paya.io/docs
+- **Production**: https://api.monte.io/docs
+- **Testnet**: https://test-api.monte.io/docs
 
 The interactive explorer allows you to:
 - Browse all available endpoints
@@ -229,16 +229,16 @@ The interactive explorer allows you to:
 
 Official SDKs are available for popular programming languages:
 
-- [JavaScript/TypeScript SDK](https://github.com/paya/paya-js)
-- [Python SDK](https://github.com/paya/paya-python)
-- [Go SDK](https://github.com/paya/paya-go)
+- [JavaScript/TypeScript SDK](https://github.com/monte/monte-js)
+- [Python SDK](https://github.com/monte/monte-python)
+- [Go SDK](https://github.com/monte/monte-go)
 
 ## Support
 
 For API support and questions:
-- Email: api-support@paya.io
-- Documentation: https://docs.paya.io
-- Status Page: https://status.paya.io
+- Email: api-support@monte.io
+- Documentation: https://docs.monte.io
+- Status Page: https://status.monte.io
 
 ## Changelog
 

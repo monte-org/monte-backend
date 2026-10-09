@@ -11,7 +11,7 @@ mod types;
 /// This contract manages recurring billing subscriptions on the Stellar network.
 /// It handles subscription plans, customer subscriptions, billing cycles, proration,
 /// and dunning management for failed payments. The contract integrates with other
-/// Paya contracts for payment processing and merchant vault management.
+/// Monte contracts for payment processing and merchant vault management.
 /// 
 /// # Design Goals
 /// - Flexible subscription plan configuration

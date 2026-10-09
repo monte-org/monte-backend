@@ -6,15 +6,15 @@ import { Section } from "@/components/site/Section";
 
 const items = [
   {
-    q: "Is Paya a wallet or an exchange?",
-    a: "Paya is payment infrastructure. It provides a checkout + API, plus settlement and programmable flows on Stellar via Soroban smart contracts.",
+    q: "Is Monte a wallet or an exchange?",
+    a: "Monte is payment infrastructure. It provides a checkout + API, plus settlement and programmable flows on Stellar via Soroban smart contracts.",
   },
   {
     q: "What do payments settle as?",
     a: "Payments settle as USDC on the Stellar network. This makes accounting and payouts more consistent for merchants.",
   },
   {
-    q: "Is Paya production-ready today?",
+    q: "Is Monte production-ready today?",
     a: "The repo is actively building toward an MVP. The landing page reflects the intended product scope (gateway, ramps, escrow, splits, subscriptions).",
   },
   {
@@ -32,7 +32,7 @@ export function FAQ() {
       id="faq"
       eyebrow="FAQ"
       title="Common questions"
-      description="Quick answers about what Paya is building and how it works."
+      description="Quick answers about what Monte is building and how it works."
     >
       <div className="mx-auto max-w-3xl divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:divide-white/10 dark:border-white/10 dark:bg-white/5">
         {items.map((item, idx) => {
